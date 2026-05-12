@@ -133,25 +133,24 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 /* GRID */
 #tgrid{flex:1;overflow-y:auto;background:var(--bg)}
 #tgrid-inner{position:relative}
-.trow{display:flex;height:32px;border-bottom:1px solid var(--b1);transition:background .1s;flex-shrink:0}
+.trow{display:flex;height:40px;border-bottom:1px solid var(--b1);transition:background .1s;flex-shrink:0;overflow:visible;position:relative}
 .trow.half{border-bottom:1px dashed var(--s3)}
 .trow.over{background:rgba(240,160,48,.1)!important;outline:1px solid var(--accent)}
-.tlabel{width:70px;flex-shrink:0;padding:4px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:100%}
+.tlabel{width:70px;flex-shrink:0;padding:4px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:40px;z-index:1}
 .tl-h{font-size:11px;color:var(--t2);font-weight:500}.tl-ap{font-size:8px;color:var(--accent);margin-top:1px}.tl-30{font-size:9px;color:var(--t4)}
-.ttasks{flex:1;position:relative;overflow:visible}
-/* Scheduled tasks — absolutely positioned, can span multiple rows */
+.ttasks{flex:1;position:relative;overflow:visible;height:40px}
 .stask{
   position:absolute;left:8px;right:8px;top:2px;
-  display:flex;flex-direction:column;justify-content:space-between;
-  padding:3px 10px 4px;
+  display:flex;flex-direction:column;
+  padding:4px 10px 2px;
   border-left:2px solid var(--accent);background:var(--ad);
   border-radius:0 3px 3px 0;cursor:grab;user-select:none;
-  transition:opacity .12s;z-index:2;overflow:hidden;min-height:26px;
-  box-sizing:border-box;
+  transition:opacity .12s;z-index:3;overflow:visible;
+  box-sizing:border-box;min-height:36px;
 }
 .stask.done{border-left-color:var(--green);background:var(--gd)}
 .stask.dragging-slot{opacity:.2}
-.st-top{display:flex;align-items:center;gap:7px;flex:1;min-height:0;overflow:hidden}
+.st-top{display:flex;align-items:center;gap:7px;overflow:hidden;flex:1}
 .st-chk{width:12px;height:12px;border:1px solid var(--accent);border-radius:2px;background:transparent;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--green);transition:all .15s}
 .stask.done .st-chk{border-color:var(--green);background:var(--gd)}
 .st-txt{flex:1;font-size:11px;font-weight:500;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -159,18 +158,19 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .st-rm{background:transparent;border:none;color:var(--t3);font-size:11px;padding:0 2px;flex-shrink:0;opacity:0;transition:opacity .12s}
 .stask:hover .st-rm{opacity:.7}
 .st-rm:hover{color:var(--t1)!important;opacity:1!important}
-.st-dur{font-size:8px;color:rgba(240,160,48,.5);flex-shrink:0;letter-spacing:.5px}
-.stask.done .st-dur{color:rgba(61,214,140,.4)}
-/* Resize handle */
+.st-dur{font-size:8px;color:rgba(240,160,48,.6);flex-shrink:0;letter-spacing:.5px;font-weight:500}
+.stask.done .st-dur{color:rgba(61,214,140,.5)}
+/* Resize handle — always visible at bottom */
 .st-resize{
-  height:6px;width:100%;cursor:ns-resize;
+  width:100%;height:8px;cursor:ns-resize;
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:2px;
+  flex-shrink:0;padding:2px 0;margin-top:2px;
+  position:relative;z-index:4;
 }
-.st-resize-bar{width:24px;height:2px;background:rgba(240,160,48,.35);border-radius:1px;pointer-events:none}
-.stask.done .st-resize-bar{background:rgba(61,214,140,.3)}
-.stask:hover .st-resize-bar{background:rgba(240,160,48,.7)}
-.stask.done:hover .st-resize-bar{background:rgba(61,214,140,.7)}
+.st-resize-bar{width:32px;height:3px;background:rgba(240,160,48,.4);border-radius:2px;pointer-events:none;transition:background .15s,width .15s}
+.stask.done .st-resize-bar{background:rgba(61,214,140,.35)}
+.stask:hover .st-resize-bar{background:rgba(240,160,48,.8);width:40px}
+.stask.done:hover .st-resize-bar{background:rgba(61,214,140,.8)}
 
 /* RIGHT */
 #rp{width:262px;min-width:262px;display:flex;flex-direction:column;border-left:1px solid var(--b1);background:var(--s1);overflow:hidden}
@@ -952,7 +952,7 @@ function renderMonthGoals(){
       <button class="g-del" onclick="removeGoalByKey('${g.id}','${gk}')">×</button>
     </div>`).join('');
 }
-const SLOT_H = 32; // px per 30-min slot
+const SLOT_H = 40; // px per 30-min slot
 
 function buildTimeGrid(){
   document.getElementById('tgrid-inner').innerHTML=SLOTS.map(slot=>{
@@ -960,7 +960,7 @@ function buildTimeGrid(){
     const h12=h>12?h-12:(h===0?12:h), ap=h>=12?'PM':'AM';
     const label=isH?`<span class="tl-h">${String(h12).padStart(2,'0')}:00</span><span class="tl-ap">${ap}</span>`
       :`<span class="tl-30">${String(h12).padStart(2,'0')}:30</span>`;
-    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:${SLOT_H}px"
+    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:40px"
       ondragover="onSlotOver(event,'${slot}')" ondragleave="onSlotLeave(this)" ondrop="onSlotDrop(event,'${slot}')">
       <div class="tlabel">${label}</div>
       <div class="ttasks" id="ts-${slot.replace(':','-')}"></div>
