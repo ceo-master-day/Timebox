@@ -553,6 +553,7 @@ async function sbSet(dataKey,value){
   const row={user_id:USER_ID,data_key:dataKey,data_value:JSON.stringify(value),updated_at:new Date().toISOString()};
   const r=await sbFetch('POST','timebox?on_conflict=user_id,data_key',row);
   setSyncStatus(r!==null?'ok':'err');
+  return r!==null;
 }
 
 async function pullFromCloud(){
@@ -569,10 +570,31 @@ async function pullFromCloud(){
   return false;
 }
 
+/* ── BACKUP STORAGE (USER_ID 없는 안전 백업, 같은 브라우저에서 버전 업데이트해도 유지) ── */
+const BK='timebox_bk_';
+function bkGet(k){try{return localStorage.getItem(BK+k);}catch{return null;}}
+function bkSet(k,v){try{localStorage.setItem(BK+k,v);}catch{}}
+
+/* ── 저장 실패 큐 — Supabase 실패하면 나중에 재시도 ── */
+const pendingSync=new Map();
+
 async function storeSet(key,value){
-  lsSet(key,JSON.stringify(value));
-  sbSet(key,value);
+  const str=JSON.stringify(value);
+  lsSet(key,str);
+  bkSet(key,str);
+  const ok=await sbSet(key,value);
+  if(!ok) pendingSync.set(key,value); // 실패하면 큐에 추가
+  else pendingSync.delete(key);
 }
+
+/* 실패한 항목 재시도 (30초마다) */
+setInterval(async()=>{
+  if(!SB.ready||!SB.token||pendingSync.size===0) return;
+  for(const[k,v] of pendingSync){
+    const ok=await sbSet(k,v);
+    if(ok) pendingSync.delete(k);
+  }
+},30000);
 
 /* ── SETUP ── */
 function copySetupSQL(){
@@ -654,14 +676,23 @@ async function launchApp(){
     `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${KR[d.getDay()]}요일`;
   document.getElementById('g-mo-lbl').textContent=`${d.getMonth()+1}월`;
 
-  // ── 이전 버전 데이터 마이그레이션 ──
   migrateOldData();
-
   buildTimeGrid();
+
+  // 로컬 데이터 먼저 로드 (즉시 표시)
   loadLocalData();
   render();
-  const synced=await pullFromCloud();
-  if(synced){loadLocalData();render();}
+
+  // Supabase에서 최신 데이터 가져오기
+  if(SB.ready){
+    const synced=await pullFromCloud();
+    if(synced){
+      loadLocalData();
+      render();
+      // 로컬에 없던 데이터를 로컬에도 백업
+      lsKeys().forEach(k=>{const v=lsGet(k);if(v)bkSet(k,v);});
+    }
+  }
 }
 
 /* 이전 네임스페이스(timebox_v1_, tb:) → 새 네임스페이스(tb_userid_)로 복사 */
@@ -692,11 +723,22 @@ function migrateOldData(){
 }
 
 function loadLocalData(){
-  try{const t=lsGet(TK);state.tasks=t?JSON.parse(t):[];}catch{state.tasks=[];}
-  try{const y=lsGet(YK);state.carryover=y?JSON.parse(y).filter(x=>!x.completed):[];}catch{state.carryover=[];}
-  try{const t3=lsGet('top3:'+TK);state.top3=t3?JSON.parse(t3):mk3();}catch{state.top3=mk3();}
-  try{const g=lsGet('goals:'+MK);state.goals=g?JSON.parse(g):[];}catch{state.goals=[];}
-  try{const th=lsGet('thoughts:'+TK);if(th){const ta=document.getElementById('th-ta');if(ta){ta.value=th;updateCC();}}}catch{}
+  // 메인 스토리지 읽기 → 없으면 백업에서 복구
+  function getWithFallback(key){
+    const v=lsGet(key);
+    if(v) return v;
+    const bk=bkGet(key);
+    if(bk){lsSet(key,bk); return bk;} // 백업에서 복구
+    return null;
+  }
+  try{const t=getWithFallback(TK);state.tasks=t?JSON.parse(t):[];}catch{state.tasks=[];}
+  try{const y=getWithFallback(YK);state.carryover=y?JSON.parse(y).filter(x=>!x.completed):[];}catch{state.carryover=[];}
+  try{const t3=getWithFallback('top3:'+TK);state.top3=t3?JSON.parse(t3):mk3();}catch{state.top3=mk3();}
+  try{const g=getWithFallback('goals:'+MK);state.goals=g?JSON.parse(g):[];}catch{state.goals=[];}
+  try{
+    const th=getWithFallback('thoughts:'+TK);
+    if(th){const ta=document.getElementById('th-ta');if(ta){ta.value=th;updateCC();}}
+  }catch{}
 }
 
 /* ── INIT ── */
@@ -818,6 +860,7 @@ function autoSaveTh(){
   thTimer=setTimeout(()=>{
     const v=document.getElementById('th-ta').value;
     lsSet('thoughts:'+TK,JSON.stringify(v));
+    bkSet('thoughts:'+TK,JSON.stringify(v)); // 백업
     sbSet('thoughts:'+TK,v);
     sv.textContent='저장됨 ✓'; sv.className='saved';
     setTimeout(()=>{sv.textContent='';},2000);
