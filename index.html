@@ -21,17 +21,12 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:'IBM Plex
 button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:none}
 .hidden{display:none!important}
 
-/* ── AUTH SCREENS ── */
-#auth-wrap{
-  position:fixed;inset:0;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  z-index:999;padding:20px;
-}
+/* AUTH */
+#auth-wrap{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
 .auth-box{width:380px;max-width:100%}
-.auth-logo{font-size:14px;font-weight:600;letter-spacing:5px;color:var(--accent);margin-bottom:6px;text-transform:uppercase}
+.auth-logo{font-size:14px;font-weight:600;letter-spacing:5px;color:var(--accent);margin-bottom:6px}
 .auth-tagline{font-size:10px;color:var(--t4);margin-bottom:32px;letter-spacing:.5px}
-.auth-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--b2)}
-.auth-tab{flex:1;text-align:center;padding:8px;font-size:11px;letter-spacing:1.5px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none}
+.auth-tab{flex:1;text-align:center;padding:8px;font-size:11px;letter-spacing:1.5px;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none;font-family:inherit}
 .auth-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
 .auth-label{font-size:9px;letter-spacing:2px;color:var(--t3);margin-bottom:6px;text-transform:uppercase}
 .auth-input{width:100%;background:var(--s2);border:1px solid var(--b2);color:var(--t1);padding:11px 14px;font-family:inherit;font-size:12px;border-radius:var(--r);outline:none;margin-bottom:12px;transition:border-color .15s}
@@ -42,36 +37,26 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .auth-err.show{display:block}
 .auth-ok{font-size:10px;color:var(--green);margin-bottom:10px;padding:8px 10px;background:var(--gd);border-radius:var(--r);display:none}
 .auth-ok.show{display:block}
-.auth-divider{height:1px;background:var(--b1);margin:20px 0}
-.auth-setup-link{font-size:10px;color:var(--t4);text-align:center;cursor:pointer}
-.auth-setup-link span{color:var(--blue)}.auth-setup-link span:hover{text-decoration:underline}
 
-/* ── SETUP SCREEN ── */
-#setup-wrap{
-  position:fixed;inset:0;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  z-index:998;padding:20px;
-}
-.setup-box{width:460px;max-width:100%}
+/* SETUP */
+#setup-wrap{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:998;padding:20px;overflow-y:auto}
+.setup-box{width:460px;max-width:100%;padding:20px 0}
 .setup-logo{font-size:14px;font-weight:600;letter-spacing:5px;color:var(--accent);margin-bottom:6px}
-.setup-sub{font-size:10px;color:var(--t3);margin-bottom:28px;line-height:1.8}
+.setup-sub{font-size:10px;color:var(--t3);margin-bottom:24px;line-height:1.8}
+.setup-note{font-size:10px;color:var(--t4);line-height:1.7;padding:10px 12px;background:var(--s2);border-radius:var(--r);margin-bottom:14px}
+.setup-note strong{color:var(--green)}
+.code-block{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r);padding:10px 12px;font-size:10px;color:var(--t2);line-height:1.8;margin-bottom:8px;white-space:pre;overflow-x:auto}
 .setup-label{font-size:9px;letter-spacing:2px;color:var(--t3);margin-bottom:6px;text-transform:uppercase}
 .setup-input{width:100%;background:var(--s2);border:1px solid var(--b2);color:var(--t1);padding:11px 14px;font-family:inherit;font-size:12px;border-radius:var(--r);outline:none;margin-bottom:12px;transition:border-color .15s}
 .setup-input:focus{border-color:var(--accent)}.setup-input::placeholder{color:var(--t4)}
-.setup-btn{width:100%;padding:12px;background:var(--accent);border:none;color:#0b0c0e;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:2px;border-radius:var(--r);cursor:pointer;transition:opacity .15s;margin-bottom:10px}
+.setup-btn{width:100%;padding:12px;background:var(--accent);border:none;color:#0b0c0e;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:2px;border-radius:var(--r);cursor:pointer;margin-bottom:10px}
 .setup-btn:hover{opacity:.88}
-.setup-note{font-size:10px;color:var(--t4);line-height:1.7;padding:10px 12px;background:var(--s2);border-radius:var(--r);margin-bottom:16px}
-.setup-note strong{color:var(--green)}
-.code-block{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r);padding:10px 12px;font-size:10px;color:var(--t2);line-height:1.8;margin-bottom:8px;white-space:pre;overflow-x:auto}
-.setup-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:11px;color:var(--t2);line-height:1.5}
-.step-n{width:18px;height:18px;background:var(--ad);border:1px solid var(--accent);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--accent);font-weight:600;margin-top:1px}
-.step-n a{color:var(--blue);text-decoration:none}.step-n a:hover{text-decoration:underline}
-.copy-sql-btn{width:100%;padding:7px;background:transparent;border:1px solid var(--b2);color:var(--t3);font-family:inherit;font-size:10px;border-radius:var(--r);cursor:pointer;margin-bottom:14px;transition:all .15s;letter-spacing:1px}
-.copy-sql-btn:hover{background:var(--s2);color:var(--t1)}
 .setup-err{font-size:10px;color:var(--red);margin-bottom:10px;padding:8px 10px;background:var(--rd);border-radius:var(--r);display:none}
 .setup-err.show{display:block}
+.copy-sql-btn{width:100%;padding:7px;background:transparent;border:1px solid var(--b2);color:var(--t3);font-family:inherit;font-size:10px;border-radius:var(--r);cursor:pointer;margin-bottom:14px;transition:all .15s;letter-spacing:1px}
+.copy-sql-btn:hover{background:var(--s2);color:var(--t1)}
 
-/* ── APP ── */
+/* APP */
 #app{display:flex;flex-direction:column;height:100vh}
 #hdr{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:50px;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0;position:relative;gap:12px}
 #hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--accent) 0%,transparent 40%);opacity:.4}
@@ -81,22 +66,21 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .hdr-prog{font-size:10px;color:var(--t3)}.hdr-prog .pd{color:var(--green);font-weight:500}.hdr-prog .pp{color:var(--accent);margin-left:6px}
 .hdr-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s}
-.sync-dot.ok{background:var(--green)}.sync-dot.syncing{background:var(--accent);animation:pulse .8s infinite}.sync-dot.err{background:var(--red)}
+.sync-dot.ok{background:var(--green)}.sync-dot.syncing{background:var(--accent);animation:pulse .8s infinite}.sync-dot.err{background:var(--red)}.sync-dot.local{background:var(--t4)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .sync-lbl{font-size:9px;color:var(--t3);letter-spacing:.5px}
-.user-badge{background:var(--s3);border:1px solid var(--b2);color:var(--t2);padding:3px 10px;font-size:10px;border-radius:var(--r);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-badge{background:var(--s3);border:1px solid var(--b2);color:var(--t2);padding:3px 10px;font-size:10px;border-radius:var(--r);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tabs{display:flex;gap:3px}
 .tab{background:transparent;border:1px solid var(--b2);color:var(--t3);padding:4px 14px;font-size:10px;letter-spacing:2px;border-radius:var(--r);transition:all .15s}
 .tab:hover{background:var(--s3);color:var(--t2)}.tab.on{background:var(--ad);border-color:var(--accent);color:var(--accent);font-weight:500}
 .icon-btn{background:transparent;border:1px solid var(--b2);color:var(--t3);width:30px;height:30px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s;position:relative}
-.icon-btn:hover{background:var(--s3);color:var(--t2);border-color:var(--b3)}
+.icon-btn:hover{background:var(--s3);color:var(--t2)}
 .icon-btn .tip{position:absolute;top:34px;right:0;background:var(--s4);border:1px solid var(--b2);color:var(--t2);font-size:9px;white-space:nowrap;padding:4px 8px;border-radius:var(--r);pointer-events:none;opacity:0;transition:opacity .15s;z-index:100}
 .icon-btn:hover .tip{opacity:1}
-
 #main{flex:1;overflow:hidden;display:flex}
 .view{flex:1;display:flex;overflow:hidden}
 
-/* LEFT */
+/* TODAY */
 #today{display:flex;flex:1;overflow:hidden}
 #lp{width:300px;min-width:300px;display:flex;flex-direction:column;border-right:1px solid var(--b1);background:var(--s1);overflow:hidden}
 .lp-sec{padding:12px 14px;border-bottom:1px solid var(--b1);flex-shrink:0}
@@ -105,7 +89,7 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .add-row{display:flex;gap:6px}
 .add-input{flex:1;background:var(--s3);border:1px solid var(--b2);color:var(--t1);padding:7px 10px;font-family:inherit;font-size:12px;border-radius:var(--r);outline:none;transition:border-color .15s}
 .add-input:focus{border-color:var(--accent)}.add-input::placeholder{color:var(--t4)}
-.add-btn{width:32px;height:32px;background:var(--accent);border:none;color:#0b0c0e;font-size:22px;font-weight:300;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s;line-height:1}
+.add-btn{width:32px;height:32px;background:var(--accent);border:none;color:#0b0c0e;font-size:22px;font-weight:300;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
 .add-btn:hover{opacity:.82}
 #tlist{flex:1;overflow-y:auto;padding:10px 14px}
 .sub-lbl{font-size:9px;letter-spacing:2px;color:var(--t4);margin-bottom:8px;font-weight:500}
@@ -133,43 +117,28 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 /* GRID */
 #tgrid{flex:1;overflow-y:auto;background:var(--bg)}
 #tgrid-inner{position:relative}
-.trow{display:flex;height:40px;border-bottom:1px solid var(--b1);transition:background .1s;flex-shrink:0;overflow:visible;position:relative}
+.trow{display:flex;height:40px;border-bottom:1px solid var(--b1);flex-shrink:0;position:relative;overflow:visible}
 .trow.half{border-bottom:1px dashed var(--s3)}
 .trow.over{background:rgba(240,160,48,.1)!important;outline:1px solid var(--accent)}
-.tlabel{width:70px;flex-shrink:0;padding:4px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:40px;z-index:1}
+.tlabel{width:70px;flex-shrink:0;padding:4px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:40px;z-index:1;position:relative}
 .tl-h{font-size:11px;color:var(--t2);font-weight:500}.tl-ap{font-size:8px;color:var(--accent);margin-top:1px}.tl-30{font-size:9px;color:var(--t4)}
 .ttasks{flex:1;position:relative;overflow:visible;height:40px}
-.stask{
-  position:absolute;left:8px;right:8px;top:2px;
-  display:flex;flex-direction:column;
-  padding:4px 10px 2px;
-  border-left:2px solid var(--accent);background:var(--ad);
-  border-radius:0 3px 3px 0;cursor:grab;user-select:none;
-  transition:opacity .12s;z-index:3;overflow:visible;
-  box-sizing:border-box;min-height:36px;
-}
+.stask{position:absolute;left:8px;right:8px;top:2px;display:flex;flex-direction:column;padding:4px 10px 0;border-left:2px solid var(--accent);background:var(--ad);border-radius:0 3px 3px 0;cursor:grab;user-select:none;z-index:3;box-sizing:border-box;min-height:36px;overflow:hidden}
 .stask.done{border-left-color:var(--green);background:var(--gd)}
 .stask.dragging-slot{opacity:.2}
-.st-top{display:flex;align-items:center;gap:7px;overflow:hidden;flex:1}
+.st-top{display:flex;align-items:center;gap:7px;overflow:hidden;flex:1;min-height:0}
 .st-chk{width:12px;height:12px;border:1px solid var(--accent);border-radius:2px;background:transparent;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--green);transition:all .15s}
 .stask.done .st-chk{border-color:var(--green);background:var(--gd)}
 .st-txt{flex:1;font-size:11px;font-weight:500;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stask.done .st-txt{text-decoration:line-through;color:var(--green)}
 .st-rm{background:transparent;border:none;color:var(--t3);font-size:11px;padding:0 2px;flex-shrink:0;opacity:0;transition:opacity .12s}
-.stask:hover .st-rm{opacity:.7}
-.st-rm:hover{color:var(--t1)!important;opacity:1!important}
-.st-dur{font-size:8px;color:rgba(240,160,48,.6);flex-shrink:0;letter-spacing:.5px;font-weight:500}
-.stask.done .st-dur{color:rgba(61,214,140,.5)}
-/* Resize handle — always visible at bottom */
-.st-resize{
-  width:100%;height:8px;cursor:ns-resize;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;padding:2px 0;margin-top:2px;
-  position:relative;z-index:4;
-}
-.st-resize-bar{width:32px;height:3px;background:rgba(240,160,48,.4);border-radius:2px;pointer-events:none;transition:background .15s,width .15s}
+.stask:hover .st-rm{opacity:.7}.st-rm:hover{opacity:1!important;color:var(--t1)}
+.st-dur{font-size:8px;color:rgba(240,160,48,.7);flex-shrink:0;font-weight:500}
+.stask.done .st-dur{color:rgba(61,214,140,.6)}
+.st-resize{width:100%;height:8px;cursor:ns-resize;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:visible}
+.st-resize-bar{width:32px;height:3px;background:rgba(240,160,48,.4);border-radius:2px;pointer-events:none;transition:all .15s}
 .stask.done .st-resize-bar{background:rgba(61,214,140,.35)}
-.stask:hover .st-resize-bar{background:rgba(240,160,48,.8);width:40px}
+.stask:hover .st-resize-bar{background:rgba(240,160,48,.85);width:40px}
 .stask.done:hover .st-resize-bar{background:rgba(61,214,140,.8)}
 
 /* RIGHT */
@@ -221,24 +190,23 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .wkh{text-align:center;font-size:10px;padding:5px;letter-spacing:1px;font-weight:500}
 .wkh.su{color:var(--red)}.wkh.sa{color:var(--blue)}.wkh.wd{color:var(--t4)}
 #calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.dcell{min-height:110px;padding:8px;border:0.5px solid var(--b1);border-radius:var(--r);background:var(--s1);cursor:pointer;transition:background .12s,border-color .12s;overflow:hidden}
-.dcell:hover{background:var(--s2)}.dcell.today{border-color:var(--accent);border-width:1px}.dcell.sel{background:var(--s2);border-color:var(--b3)}.dcell.empty{background:transparent;border-color:transparent;cursor:default}
-.dn{font-size:11px;font-weight:500;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
-.dn.t{color:var(--accent)}.dn.su{color:var(--red)}.dn.sa{color:var(--blue)}.dn.r{color:var(--t3)}
-.d-task{font-size:8.5px;color:var(--t3);margin-bottom:2px;line-height:1.35;display:flex;align-items:flex-start;gap:3px;overflow:hidden}
-.d-task .dt-dot{flex-shrink:0;margin-top:1px}
-.d-task .dt-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.d-task.done-t{color:var(--t4)}.d-task.done-t .dt-txt{text-decoration:line-through}
-.d-task.done-t .dt-dot{color:var(--green)}
-.d-task.plan-t{color:#2a3a5a}
-.d-more{font-size:8px;color:var(--t4);margin-top:2px}
-.dbar{height:2px;background:var(--b1);border-radius:1px;overflow:hidden;margin-top:5px}
+.dcell{min-height:108px;padding:7px 8px;border:0.5px solid var(--b1);border-radius:var(--r);background:var(--s1);overflow:hidden;cursor:pointer;transition:background .12s}
+.dcell:hover{background:var(--s2)}.dcell.today{border:1px solid var(--accent)}.dcell.sel{background:var(--s2);border-color:var(--b2)}.dcell.empty{background:transparent;border-color:transparent;cursor:default}
+.dc-num{font-size:10px;font-weight:500;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
+.dc-num.t{color:var(--accent)}.dc-num.su{color:var(--red)}.dc-num.sa{color:var(--blue)}.dc-num.r{color:var(--t3)}
+.d-task{font-size:8px;color:var(--t3);margin-bottom:2px;display:flex;align-items:flex-start;gap:3px;line-height:1.35;overflow:hidden}
+.d-task .dot{flex-shrink:0}.d-task .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.d-task.dn{color:var(--t4)}.d-task.dn .txt{text-decoration:line-through}.d-task.dn .dot{color:var(--green)}
+.d-task.pl .dot{color:var(--blue)}.d-task.pl .txt{color:#1e3a6e}
+.d-more{font-size:7.5px;color:var(--t4);margin-top:2px}
+.dbar{height:2px;background:var(--b1);border-radius:1px;margin-top:5px;overflow:hidden}
 .dbar-f{height:100%;border-radius:1px}
-.d-badges{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap}
-.d-badge{font-size:7.5px;padding:1px 5px;border-radius:2px}
+.d-badges{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}
+.d-badge{font-size:7px;padding:1px 5px;border-radius:2px}
+.d-badge.done-all{color:var(--green);background:rgba(61,214,140,.1)}
 .d-badge.th{color:var(--purple);background:rgba(167,139,250,.1)}
 .d-badge.pl{color:var(--blue);background:rgba(91,156,246,.1)}
-.d-badge.done-all{color:var(--green);background:rgba(61,214,140,.1)}
+.d-badge.pct{color:var(--accent);background:var(--ad2)}
 #ddetail{margin-top:14px;padding:14px 16px;background:var(--s1);border:1px solid var(--b2);border-radius:6px}
 .dd-hdr{font-size:11px;color:var(--accent);letter-spacing:2px;font-weight:500;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
 .ddr{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--b1)}
@@ -253,7 +221,6 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .dd-plan-input{flex:1;background:var(--s3);border:1px solid var(--b2);color:var(--t1);padding:6px 9px;font-family:inherit;font-size:11px;border-radius:var(--r);outline:none}
 .dd-plan-input:focus{border-color:var(--accent)}.dd-plan-input::placeholder{color:var(--t4)}
 .dd-plan-add{width:26px;height:26px;background:var(--accent);border:none;color:#0b0c0e;font-size:17px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
-.dd-plan-add:hover{opacity:.8}
 .dd-plan-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:var(--r);transition:background .1s}
 .dd-plan-item:hover{background:var(--s2)}.dd-plan-item:hover .dd-plan-del{opacity:.6}
 .dd-plan-chk{width:13px;height:13px;border:1px solid var(--b3);border-radius:2px;background:transparent;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--green);transition:all .15s}
@@ -291,13 +258,13 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 </head>
 <body>
 
-<!-- ══ SETUP SCREEN ══ -->
+<!-- SETUP -->
 <div id="setup-wrap">
   <div class="setup-box">
     <div class="setup-logo">TIMEBOX</div>
-    <div class="setup-sub">처음 설정이에요. Supabase 프로젝트와 연결해주세요.<br>한 번만 하면 이후 자동으로 로그인할 수 있어요.</div>
+    <div class="setup-sub">처음 설정이에요. Supabase 프로젝트와 연결해주세요.</div>
     <div class="setup-note">
-      <strong>1.</strong> <a href="https://supabase.com" target="_blank" style="color:var(--blue)">supabase.com</a>에서 프로젝트 생성 후 SQL Editor에서 아래 실행:<br><br>
+      <strong>1.</strong> <a href="https://supabase.com" target="_blank" style="color:var(--blue)">supabase.com</a> → SQL Editor에서 아래 코드 실행<br>
       <strong>2.</strong> Settings → API Keys → Legacy anon 키 복사
     </div>
     <div class="code-block">CREATE TABLE IF NOT EXISTS timebox (
@@ -310,24 +277,25 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 ALTER TABLE timebox ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "open" ON timebox;
 CREATE POLICY "open" ON timebox FOR ALL USING (true) WITH CHECK (true);</div>
-    <button class="copy-sql-btn" onclick="copySetupSQL()">SQL 복사</button>
+    <button class="copy-sql-btn" onclick="copySQL()">SQL 복사</button>
     <div class="setup-label">Project URL</div>
     <input class="setup-input" id="s-url" type="text" placeholder="https://xxxxxxxxxxxx.supabase.co">
     <div class="setup-label">Anon Public Key</div>
     <input class="setup-input" id="s-key" type="text" placeholder="eyJhbGciOi...">
     <div class="setup-err" id="setup-err"></div>
     <button class="setup-btn" onclick="saveSetup()">저장하고 시작하기</button>
+    <div style="font-size:10px;color:var(--t4);text-align:center;cursor:pointer" onclick="resetSetup()">설정 초기화</div>
   </div>
 </div>
 
-<!-- ══ AUTH SCREEN ══ -->
+<!-- AUTH -->
 <div id="auth-wrap" class="hidden">
   <div class="auth-box">
     <div class="auth-logo">TIMEBOX</div>
     <div class="auth-tagline">나만의 일정 관리 플래너</div>
     <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--b2)">
-      <button class="auth-tab on" id="tab-login" onclick="switchAuthTab('login')">로그인</button>
-      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">회원가입</button>
+      <button class="auth-tab on" id="tab-login" onclick="switchTab('login')">로그인</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">회원가입</button>
     </div>
     <div class="auth-err" id="auth-err"></div>
     <div class="auth-ok" id="auth-ok"></div>
@@ -336,12 +304,12 @@ CREATE POLICY "open" ON timebox FOR ALL USING (true) WITH CHECK (true);</div>
     <div class="auth-label">비밀번호</div>
     <input class="auth-input" id="a-pw" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()">
     <button class="auth-btn" id="auth-btn" onclick="doAuth()">로그인</button>
-    <div class="auth-divider"></div>
-    <div class="auth-setup-link" onclick="resetSetup()">다른 Supabase 프로젝트 사용 → <span>설정 변경</span></div>
+    <div style="height:1px;background:var(--b1);margin:20px 0"></div>
+    <div style="font-size:10px;color:var(--t4);text-align:center;cursor:pointer" onclick="resetSetup()">다른 Supabase 프로젝트 사용 → <span style="color:var(--blue)">설정 변경</span></div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
+<!-- APP -->
 <div id="app" class="hidden">
 <div id="hdr">
   <span class="logo">TIMEBOX</span>
@@ -350,14 +318,14 @@ CREATE POLICY "open" ON timebox FOR ALL USING (true) WITH CHECK (true);</div>
     <span class="hdr-prog hidden" id="hdr-prog"></span>
   </div>
   <div class="hdr-right">
-    <div class="sync-dot syncing" id="sync-dot"></div>
-    <span class="sync-lbl" id="sync-lbl">연결 중</span>
+    <div class="sync-dot local" id="sync-dot"></div>
+    <span class="sync-lbl" id="sync-lbl">로컬</span>
     <span class="user-badge" id="user-badge"></span>
     <div class="tabs">
       <button class="tab on" data-v="today" onclick="setView('today')">오늘</button>
       <button class="tab" data-v="month" onclick="setView('month')">월별</button>
     </div>
-    <button class="icon-btn" onclick="doSignOut()" title="로그아웃">⏻<span class="tip">로그아웃</span></button>
+    <button class="icon-btn" onclick="doSignOut()">⏻<span class="tip">로그아웃</span></button>
   </div>
 </div>
 <div id="main">
@@ -450,70 +418,59 @@ function uid(){return 'u'+Date.now().toString(36)+Math.random().toString(36).sub
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 const TK=fmt(TODAY), YK=fmt(YESTERDAY), MK=fmtM(TODAY);
 
-/* ── CONFIG STORAGE (no user prefix — shared) ── */
+/* ── STORAGE ── */
 const CFG='timebox_cfg_';
 function cfgGet(k){try{return localStorage.getItem(CFG+k);}catch{return null;}}
 function cfgSet(k,v){try{localStorage.setItem(CFG+k,v);}catch{}}
 function cfgDel(k){try{localStorage.removeItem(CFG+k);}catch{}}
 
-/* ── USER DATA STORAGE (prefixed by user id) ── */
 let USER_ID='';
 function lsGet(k){try{return localStorage.getItem('tb_'+USER_ID+'_'+k);}catch{return null;}}
 function lsSet(k,v){try{localStorage.setItem('tb_'+USER_ID+'_'+k,v);}catch{}}
-function lsKeys(){
-  try{const pfx='tb_'+USER_ID+'_';return Object.keys(localStorage).filter(x=>x.startsWith(pfx)).map(x=>x.slice(pfx.length));}
-  catch{return [];}
-}
+function lsKeys(){try{const p='tb_'+USER_ID+'_';return Object.keys(localStorage).filter(x=>x.startsWith(p)).map(x=>x.slice(p.length));}catch{return[];}}
 
-/* ── SUPABASE CONFIG ── */
+/* 백업 (USER_ID 없음 — 버전 업데이트해도 유지) */
+const BK='timebox_bk_';
+function bkGet(k){try{return localStorage.getItem(BK+k);}catch{return null;}}
+function bkSet(k,v){try{localStorage.setItem(BK+k,v);}catch{}}
+
+/* ── SUPABASE ── */
 let SB={url:'',key:'',token:'',ready:false};
-
 function loadCfg(){
-  const u=cfgGet('sb_url'), k=cfgGet('sb_key');
-  if(u&&k){SB.url=u.replace(/\/$/,'');SB.key=k;return true;}
+  const u=cfgGet('sb_url'),k=cfgGet('sb_key');
+  if(u&&k){SB.url=u.replace(/\/$/,'');SB.key=k;SB.ready=true;return true;}
   return false;
 }
 
-/* ── SUPABASE AUTH ── */
 async function sbAuthFetch(path,body){
   const r=await fetch(SB.url+'/auth/v1/'+path,{
-    method:'POST',
-    headers:{'apikey':SB.key,'Content-Type':'application/json'},
+    method:'POST',headers:{'apikey':SB.key,'Content-Type':'application/json'},
     body:JSON.stringify(body)
   });
   const d=await r.json();
-  if(!r.ok) throw new Error(d.error_description||d.msg||d.message||'오류가 발생했습니다');
+  if(!r.ok) throw new Error(d.error_description||d.msg||d.message||'오류');
   return d;
 }
-
-async function signUp(email,pw){
-  const d=await sbAuthFetch('signup',{email,password:pw});
-  return d;
-}
+async function signUp(email,pw){return sbAuthFetch('signup',{email,password:pw});}
 async function signIn(email,pw){
   const d=await sbAuthFetch('token?grant_type=password',{email,password:pw});
-  SB.token=d.access_token;
-  USER_ID=d.user.id;
-  cfgSet('access_token',d.access_token);
-  cfgSet('refresh_token',d.refresh_token);
-  cfgSet('user_id',d.user.id);
-  cfgSet('user_email',d.user.email);
+  SB.token=d.access_token; USER_ID=d.user.id;
+  cfgSet('access_token',d.access_token); cfgSet('refresh_token',d.refresh_token);
+  cfgSet('user_id',d.user.id); cfgSet('user_email',d.user.email);
   return d;
 }
 async function refreshSession(){
   const rt=cfgGet('refresh_token'); if(!rt) return false;
   try{
     const d=await sbAuthFetch('token?grant_type=refresh_token',{refresh_token:rt});
-    SB.token=d.access_token;
-    USER_ID=d.user.id;
-    cfgSet('access_token',d.access_token);
-    cfgSet('refresh_token',d.refresh_token);
+    SB.token=d.access_token; USER_ID=d.user.id;
+    cfgSet('access_token',d.access_token); cfgSet('refresh_token',d.refresh_token);
     return true;
   }catch{return false;}
 }
 function doSignOut(){
   if(!confirm('로그아웃할까요?'))return;
-  cfgDel('access_token');cfgDel('refresh_token');cfgDel('user_id');cfgDel('user_email');
+  ['access_token','refresh_token','user_id','user_email'].forEach(k=>cfgDel(k));
   SB.token=''; USER_ID='';
   document.getElementById('app').classList.add('hidden');
   document.getElementById('auth-wrap').classList.remove('hidden');
@@ -521,25 +478,23 @@ function doSignOut(){
   document.getElementById('a-pw').value='';
 }
 
-/* ── SUPABASE DATA ── */
 async function sbFetch(method,path,body){
-  if(!SB.token) return null;
+  if(!SB.token||!SB.ready) return null;
   try{
-    const headers={
-      'apikey':SB.key,
-      'Authorization':'Bearer '+SB.token,
-      'Content-Type':'application/json',
-      'Prefer': method==='POST' ? 'return=representation,resolution=merge-duplicates' : 'return=representation'
-    };
-    const r=await fetch(SB.url+'/rest/v1/'+path,{method,headers,body:body?JSON.stringify(body):undefined});
+    const prefer = method==='POST' ? 'return=representation,resolution=merge-duplicates' : 'return=representation';
+    const r=await fetch(SB.url+'/rest/v1/'+path,{
+      method,
+      headers:{'apikey':SB.key,'Authorization':'Bearer '+SB.token,'Content-Type':'application/json','Prefer':prefer},
+      body:body?JSON.stringify(body):undefined
+    });
     if(r.status===401){
       const ok=await refreshSession();
-      if(!ok){doSignOut();return null;}
+      if(!ok){setSyncStatus('err');return null;}
       return sbFetch(method,path,body);
     }
     if(!r.ok) return null;
-    const text=await r.text();
-    return text ? JSON.parse(text) : [];
+    const txt=await r.text();
+    return txt?JSON.parse(txt):[];
   }catch{return null;}
 }
 
@@ -548,81 +503,61 @@ function setSyncStatus(s){
   const lbl=document.getElementById('sync-lbl');
   if(!dot) return;
   dot.className='sync-dot '+s;
-  lbl.textContent={ok:'동기화됨',syncing:'동기화 중',err:'오류'}[s]||s;
+  lbl.textContent={ok:'동기화됨',syncing:'동기화 중',err:'오류',local:'로컬'}[s]||s;
 }
 
-async function sbSet(dataKey,value){
-  setSyncStatus('syncing');
-  const row={user_id:USER_ID,data_key:dataKey,data_value:JSON.stringify(value),updated_at:new Date().toISOString()};
+async function sbSet(key,value){
+  if(!SB.ready||!SB.token||!USER_ID) return false;
+  const row={user_id:USER_ID,data_key:key,data_value:JSON.stringify(value),updated_at:new Date().toISOString()};
   const r=await sbFetch('POST','timebox?on_conflict=user_id,data_key',row);
-  setSyncStatus(r!==null?'ok':'err');
+  if(r!==null) setSyncStatus('ok');
   return r!==null;
 }
 
 async function pullFromCloud(){
+  if(!SB.ready||!SB.token||!USER_ID){setSyncStatus('local');return false;}
   setSyncStatus('syncing');
   try{
     const rows=await sbFetch('GET',`timebox?user_id=eq.${encodeURIComponent(USER_ID)}&select=data_key,data_value`);
-    if(rows===null){
-      // 네트워크 오류 — 로컬 데이터 유지
-      setSyncStatus('err');
+    if(rows===null){setSyncStatus('err');return false;}
+    if(rows.length>0){
+      // 클라우드 데이터 → 로컬에 저장
+      rows.forEach(r=>{
+        try{lsSet(r.data_key,r.data_value);bkSet(r.data_key,r.data_value);}catch{}
+      });
+      setSyncStatus('ok');
+      return true;
+    } else {
+      // 클라우드 비어있음 → 로컬 데이터를 클라우드에 업로드
+      setSyncStatus('ok');
+      uploadLocalToCloud();
       return false;
     }
-    if(rows.length===0){
-      // Supabase가 비어있음 — 로컬 데이터가 있으면 클라우드에 업로드
-      setSyncStatus('ok');
-      const localKeys=lsKeys().filter(k=>!k.startsWith('_'));
-      if(localKeys.length>0){
-        for(const k of localKeys){
-          const v=lsGet(k);
-          if(v) try{await sbSet(k,JSON.parse(v));}catch{}
-        }
-      }
-      return false; // 로컬 데이터 덮어쓰지 않음
-    }
-    // Supabase에 데이터 있음 — 로컬에 저장
-    rows.forEach(r=>{
-      try{
-        lsSet(r.data_key, r.data_value);
-        bkSet(r.data_key, r.data_value);
-      }catch{}
-    });
-    setSyncStatus('ok');
-    return true;
-  }catch{
-    setSyncStatus('err');
-    return false;
-  }
+  }catch{setSyncStatus('err');return false;}
 }
 
-/* ── BACKUP STORAGE (USER_ID 없는 안전 백업, 같은 브라우저에서 버전 업데이트해도 유지) ── */
-const BK='timebox_bk_';
-function bkGet(k){try{return localStorage.getItem(BK+k);}catch{return null;}}
-function bkSet(k,v){try{localStorage.setItem(BK+k,v);}catch{}}
+async function uploadLocalToCloud(){
+  const keys=lsKeys().filter(k=>!k.startsWith('_'));
+  if(keys.length===0) return;
+  setSyncStatus('syncing');
+  let ok=true;
+  for(const k of keys){
+    const v=lsGet(k);
+    if(v){try{const r=await sbSet(k,JSON.parse(v));if(!r)ok=false;}catch{ok=false;}}
+  }
+  setSyncStatus(ok?'ok':'err');
+}
 
-/* ── 저장 실패 큐 — Supabase 실패하면 나중에 재시도 ── */
-const pendingSync=new Map();
-
+/* ── STORE ── */
 async function storeSet(key,value){
   const str=JSON.stringify(value);
   lsSet(key,str);
   bkSet(key,str);
-  const ok=await sbSet(key,value);
-  if(!ok) pendingSync.set(key,value); // 실패하면 큐에 추가
-  else pendingSync.delete(key);
+  sbSet(key,value); // fire and forget — 실패해도 로컬에는 저장됨
 }
 
-/* 실패한 항목 재시도 (30초마다) */
-setInterval(async()=>{
-  if(!SB.ready||!SB.token||pendingSync.size===0) return;
-  for(const[k,v] of pendingSync){
-    const ok=await sbSet(k,v);
-    if(ok) pendingSync.delete(k);
-  }
-},30000);
-
 /* ── SETUP ── */
-function copySetupSQL(){
+function copySQL(){
   const sql=`CREATE TABLE IF NOT EXISTS timebox (
   user_id TEXT NOT NULL,
   data_key TEXT NOT NULL,
@@ -634,8 +569,8 @@ ALTER TABLE timebox ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "open" ON timebox;
 CREATE POLICY "open" ON timebox FOR ALL USING (true) WITH CHECK (true);`;
   navigator.clipboard.writeText(sql).then(()=>{
-    const btn=document.querySelector('.copy-sql-btn');
-    btn.textContent='✓ 복사됨!'; setTimeout(()=>{btn.textContent='SQL 복사';},2000);
+    const b=document.querySelector('.copy-sql-btn');
+    b.textContent='✓ 복사됨!';setTimeout(()=>{b.textContent='SQL 복사';},2000);
   });
 }
 function saveSetup(){
@@ -644,19 +579,19 @@ function saveSetup(){
   const err=document.getElementById('setup-err');
   if(!url||!key){err.textContent='URL과 키를 모두 입력해주세요.';err.classList.add('show');return;}
   if(!url.includes('supabase')){err.textContent='올바른 Supabase URL을 입력해주세요.';err.classList.add('show');return;}
-  cfgSet('sb_url',url); cfgSet('sb_key',key);
-  SB.url=url.replace(/\/$/,''); SB.key=key;
+  cfgSet('sb_url',url);cfgSet('sb_key',key);
+  SB.url=url.replace(/\/$/,'');SB.key=key;SB.ready=true;
   document.getElementById('setup-wrap').classList.add('hidden');
   document.getElementById('auth-wrap').classList.remove('hidden');
 }
 function resetSetup(){
-  cfgDel('sb_url');cfgDel('sb_key');cfgDel('access_token');cfgDel('refresh_token');cfgDel('user_id');cfgDel('user_email');
+  ['sb_url','sb_key','access_token','refresh_token','user_id','user_email'].forEach(k=>cfgDel(k));
   location.reload();
 }
 
 /* ── AUTH UI ── */
 let authMode='login';
-function switchAuthTab(m){
+function switchTab(m){
   authMode=m;
   document.getElementById('tab-login').classList.toggle('on',m==='login');
   document.getElementById('tab-signup').classList.toggle('on',m==='signup');
@@ -670,32 +605,27 @@ async function doAuth(){
   const btn=document.getElementById('auth-btn');
   const err=document.getElementById('auth-err');
   const ok=document.getElementById('auth-ok');
-  err.classList.remove('show'); ok.classList.remove('show');
+  err.classList.remove('show');ok.classList.remove('show');
   if(!email||!pw){err.textContent='이메일과 비밀번호를 입력해주세요.';err.classList.add('show');return;}
-  btn.disabled=true; btn.textContent='처리 중...';
+  btn.disabled=true;btn.textContent='처리 중...';
   try{
     if(authMode==='signup'){
       await signUp(email,pw);
-      ok.textContent='✓ 가입 완료! 이메일을 확인하거나 바로 로그인해보세요.';
-      ok.classList.add('show');
-      switchAuthTab('login');
-    } else {
+      ok.textContent='✓ 가입 완료! 로그인해주세요.';ok.classList.add('show');
+      switchTab('login');
+    }else{
       await signIn(email,pw);
       launchApp();
     }
-  }catch(e){
-    err.textContent=e.message;
-    err.classList.add('show');
-  }
-  btn.disabled=false; btn.textContent=authMode==='login'?'로그인':'회원가입';
+  }catch(e){err.textContent=e.message;err.classList.add('show');}
+  btn.disabled=false;btn.textContent=authMode==='login'?'로그인':'회원가입';
 }
 
-/* ── LAUNCH APP ── */
+/* ── LAUNCH ── */
 async function launchApp(){
   document.getElementById('auth-wrap').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
-  const email=cfgGet('user_email')||'';
-  document.getElementById('user-badge').textContent=email;
+  document.getElementById('user-badge').textContent=cfgGet('user_email')||'';
   const d=TODAY;
   document.getElementById('hdr-date').textContent=
     `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${KR[d.getDay()]}요일`;
@@ -704,84 +634,60 @@ async function launchApp(){
   migrateOldData();
   buildTimeGrid();
 
-  // 로컬 데이터 먼저 로드 (즉시 표시)
+  // 1. 로컬(+백업) 데이터 즉시 로드
   loadLocalData();
   render();
+  setSyncStatus('syncing');
 
-  // Supabase에서 최신 데이터 가져오기
-  if(SB.ready){
-    const synced=await pullFromCloud();
-    if(synced){
-      loadLocalData();
-      render();
-      // 로컬에 없던 데이터를 로컬에도 백업
-      lsKeys().forEach(k=>{const v=lsGet(k);if(v)bkSet(k,v);});
-    }
-  }
-}
-
-/* 이전 네임스페이스(timebox_v1_, tb:) → 새 네임스페이스(tb_userid_)로 복사 */
-function migrateOldData(){
-  if(cfgGet('migrated_v2')) return; // 이미 마이그레이션 완료
-  let count=0;
-  try{
-    for(let i=0;i<localStorage.length;i++){
-      const fullKey=localStorage.key(i); if(!fullKey) continue;
-      let dataKey=null;
-      if(fullKey.startsWith('timebox_v1_')) dataKey=fullKey.slice('timebox_v1_'.length);
-      else if(fullKey.startsWith('tb:')) dataKey=fullKey.slice(3);
-      if(dataKey && !dataKey.startsWith('_') && !lsGet(dataKey)){
-        const val=localStorage.getItem(fullKey);
-        if(val){ lsSet(dataKey,val); count++; }
-      }
-    }
-  }catch(e){}
-  if(count>0){
-    console.log(`[TIMEBOX] 마이그레이션: ${count}개 항목 복원`);
-    // 복원된 데이터를 클라우드에도 업로드
-    setTimeout(async()=>{
-      const keys=lsKeys().filter(k=>!k.startsWith('_'));
-      for(const k of keys){const v=lsGet(k);if(v)await sbSet(k,JSON.parse(v));}
-    },2000);
-  }
-  cfgSet('migrated_v2','1');
+  // 2. 클라우드에서 최신 데이터 가져오기 (백그라운드)
+  pullFromCloud().then(synced=>{
+    if(synced){loadLocalData();render();}
+  });
 }
 
 function loadLocalData(){
-  // 메인 스토리지 읽기 → 없으면 백업에서 복구
-  function getWithFallback(key){
-    const v=lsGet(key);
-    if(v) return v;
-    const bk=bkGet(key);
-    if(bk){lsSet(key,bk); return bk;} // 백업에서 복구
+  function get(key){
+    const v=lsGet(key);if(v) return v;
+    const b=bkGet(key);if(b){lsSet(key,b);return b;}
     return null;
   }
-  try{const t=getWithFallback(TK);state.tasks=t?JSON.parse(t):[];}catch{state.tasks=[];}
-  try{const y=getWithFallback(YK);state.carryover=y?JSON.parse(y).filter(x=>!x.completed):[];}catch{state.carryover=[];}
-  try{const t3=getWithFallback('top3:'+TK);state.top3=t3?JSON.parse(t3):mk3();}catch{state.top3=mk3();}
-  try{const g=getWithFallback('goals:'+MK);state.goals=g?JSON.parse(g):[];}catch{state.goals=[];}
+  try{const t=get(TK);state.tasks=t?JSON.parse(t):[];}catch{state.tasks=[];}
+  try{const y=get(YK);state.carryover=y?JSON.parse(y).filter(x=>!x.completed):[];}catch{state.carryover=[];}
+  try{const t3=get('top3:'+TK);state.top3=t3?JSON.parse(t3):mk3();}catch{state.top3=mk3();}
+  try{const g=get('goals:'+MK);state.goals=g?JSON.parse(g):[];}catch{state.goals=[];}
+  try{const th=get('thoughts:'+TK);if(th){const ta=document.getElementById('th-ta');if(ta){ta.value=th;updateCC();}}}catch{}
+}
+
+function migrateOldData(){
+  if(cfgGet('migrated_v2')) return;
+  let n=0;
   try{
-    const th=getWithFallback('thoughts:'+TK);
-    if(th){const ta=document.getElementById('th-ta');if(ta){ta.value=th;updateCC();}}
+    for(let i=0;i<localStorage.length;i++){
+      const fk=localStorage.key(i);if(!fk)continue;
+      let dk=null;
+      if(fk.startsWith('timebox_v1_')) dk=fk.slice(11);
+      else if(fk.startsWith('tb:')) dk=fk.slice(3);
+      if(dk&&!dk.startsWith('_')&&!lsGet(dk)){
+        const v=localStorage.getItem(fk);if(v){lsSet(dk,v);bkSet(dk,v);n++;}
+      }
+    }
   }catch{}
+  if(n>0) setTimeout(uploadLocalToCloud,3000);
+  cfgSet('migrated_v2','1');
 }
 
 /* ── INIT ── */
 async function init(){
-  if(!loadCfg()){
-    // First time — show setup
-    return;
-  }
+  if(!loadCfg()){return;} // setup screen shows
   document.getElementById('setup-wrap').classList.add('hidden');
-  // Try existing session
-  const uid_=cfgGet('user_id'), at=cfgGet('access_token');
+  const uid_=cfgGet('user_id'),at=cfgGet('access_token');
   if(uid_&&at){
-    USER_ID=uid_; SB.token=at;
-    // Try to refresh token in background
-    refreshSession().then(ok=>{if(!ok){doSignOut();}});
+    USER_ID=uid_;SB.token=at;
     document.getElementById('auth-wrap').classList.add('hidden');
     launchApp();
-  } else {
+    // 백그라운드에서 토큰 갱신
+    refreshSession().catch(()=>{});
+  }else{
     document.getElementById('auth-wrap').classList.remove('hidden');
   }
 }
@@ -789,10 +695,10 @@ async function init(){
 /* ── SLOTS ── */
 const SLOTS=[];
 for(let h=5;h<24;h++){const hh=String(h).padStart(2,'0');SLOTS.push(hh+':00');SLOTS.push(hh+':30');}
+const SLOT_H=40;
 const mk3=()=>[0,1,2].map(()=>({id:uid(),text:'',completed:false,taskId:null}));
 const state={
-  view:'today',tasks:[],carryover:[],
-  dragging:null,draggingFrom:null,
+  view:'today',tasks:[],carryover:[],dragging:null,draggingFrom:null,
   top3:mk3(),goals:[],
   viewMonth:new Date(TODAY.getFullYear(),TODAY.getMonth(),1),
   selectedDay:null,monthCache:{},
@@ -805,61 +711,61 @@ function saveGoals(){storeSet('goals:'+MK,state.goals);}
 /* ── TASKS ── */
 function addTask(){
   const inp=document.getElementById('add-input');
-  const txt=inp.value.trim(); if(!txt) return;
-  state.tasks.push({id:uid(),text:txt,completed:false,slot:null,created:Date.now()});
-  saveToday(); inp.value=''; renderLeft(); renderGrid(); renderProg();
+  const txt=inp.value.trim();if(!txt)return;
+  state.tasks.push({id:uid(),text:txt,completed:false,slot:null,duration:1,created:Date.now()});
+  saveToday();inp.value='';renderLeft();renderGrid();renderProg();
 }
 function toggleTask(id){
-  const t=state.tasks.find(x=>x.id===id); if(!t) return;
-  t.completed=!t.completed; t.completedAt=t.completed?Date.now():null;
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  t.completed=!t.completed;t.completedAt=t.completed?Date.now():null;
   saveToday();
   const s=state.top3.find(x=>x.taskId===id);
   if(s){s.completed=t.completed;saveT3();renderTop3();}
-  renderLeft(); renderGrid(); renderProg();
+  renderLeft();renderGrid();renderProg();
 }
 function removeTask(id){
   state.tasks=state.tasks.filter(x=>x.id!==id);
   state.top3.forEach(s=>{if(s.taskId===id)s.taskId=null;});
-  saveToday(); saveT3(); renderLeft(); renderGrid(); renderProg(); renderTop3();
+  saveToday();saveT3();renderLeft();renderGrid();renderProg();renderTop3();
 }
 function unslot(id){
-  const t=state.tasks.find(x=>x.id===id); if(t){t.slot=null;saveToday();renderLeft();renderGrid();}
+  const t=state.tasks.find(x=>x.id===id);if(t){t.slot=null;saveToday();renderLeft();renderGrid();}
 }
 function pullCarryover(id){
-  const ct=state.carryover.find(x=>x.id===id); if(!ct) return;
-  state.tasks.push({id:uid(),text:ct.text,completed:false,slot:null,created:Date.now()});
+  const ct=state.carryover.find(x=>x.id===id);if(!ct)return;
+  state.tasks.push({id:uid(),text:ct.text,completed:false,slot:null,duration:1,created:Date.now()});
   state.carryover=state.carryover.filter(x=>x.id!==id);
-  saveToday(); renderCarryover(); renderLeft(); renderProg();
+  saveToday();renderCarryover();renderLeft();renderProg();
 }
 
 /* ── TOP3 ── */
 function toggleTop3(i){
-  const s=state.top3[i]; if(!s.text) return;
+  const s=state.top3[i];if(!s.text)return;
   s.completed=!s.completed;
   if(s.taskId){const t=state.tasks.find(x=>x.id===s.taskId);if(t){t.completed=s.completed;saveToday();renderLeft();renderGrid();renderProg();}}
-  saveT3(); renderTop3();
+  saveT3();renderTop3();
 }
 function clearTop3(i){state.top3[i]={id:uid(),text:'',completed:false,taskId:null};saveT3();renderTop3();}
 function commitTop3(i,txt){
   if(!txt.trim()){if(!state.top3[i].taskId)clearTop3(i);return;}
-  state.top3[i].text=txt.trim(); saveT3(); renderTop3();
+  state.top3[i].text=txt.trim();saveT3();renderTop3();
 }
 
 /* ── GOALS ── */
 function addGoal(){
   const inp=document.getElementById('goal-input');
-  const txt=inp.value.trim(); if(!txt) return;
+  const txt=inp.value.trim();if(!txt)return;
   state.goals.push({id:uid(),text:txt,completed:false,created:Date.now()});
-  saveGoals(); inp.value=''; renderGoals(); renderMonthGoals();
+  saveGoals();inp.value='';renderGoals();renderMonthGoals();
 }
 function addGoalM(){
   const inp=document.getElementById('mg-input');
-  const txt=inp.value.trim(); if(!txt) return;
-  const yr=state.viewMonth.getFullYear(), mo=state.viewMonth.getMonth();
+  const txt=inp.value.trim();if(!txt)return;
+  const yr=state.viewMonth.getFullYear(),mo=state.viewMonth.getMonth();
   const gk=`${yr}-${String(mo+1).padStart(2,'0')}`;
   if(gk===MK){state.goals.push({id:uid(),text:txt,completed:false,created:Date.now()});saveGoals();renderGoals();}
   else{const r=lsGet('goals:'+gk);let goals=r?JSON.parse(r):[];goals.push({id:uid(),text:txt,completed:false,created:Date.now()});storeSet('goals:'+gk,goals);}
-  inp.value=''; renderMonthGoals();
+  inp.value='';renderMonthGoals();
 }
 function toggleGoal(id){const g=state.goals.find(x=>x.id===id);if(!g)return;g.completed=!g.completed;saveGoals();renderGoals();renderMonthGoals();}
 function removeGoal(id){state.goals=state.goals.filter(x=>x.id!==id);saveGoals();renderGoals();renderMonthGoals();}
@@ -880,14 +786,14 @@ let thTimer=null;
 function autoSaveTh(){
   updateCC();
   const sv=document.getElementById('th-save');
-  sv.textContent='저장 중...'; sv.className='';
+  sv.textContent='저장 중...';sv.className='';
   clearTimeout(thTimer);
   thTimer=setTimeout(()=>{
     const v=document.getElementById('th-ta').value;
     lsSet('thoughts:'+TK,JSON.stringify(v));
-    bkSet('thoughts:'+TK,JSON.stringify(v)); // 백업
+    bkSet('thoughts:'+TK,JSON.stringify(v));
     sbSet('thoughts:'+TK,v);
-    sv.textContent='저장됨 ✓'; sv.className='saved';
+    sv.textContent='저장됨 ✓';sv.className='saved';
     setTimeout(()=>{sv.textContent='';},2000);
   },700);
 }
@@ -895,15 +801,15 @@ function updateCC(){document.getElementById('cc').textContent=document.getElemen
 
 /* ── DRAG ── */
 function onDragStart(e,id,from){
-  state.dragging=id; state.draggingFrom=from;
-  e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',id);
+  state.dragging=id;state.draggingFrom=from;
+  e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',id);
   setTimeout(()=>{
     if(from==='list'){const el=document.querySelector(`.ti[data-id="${id}"]`);if(el)el.classList.add('dragging');}
     if(from==='slot'){const el=document.querySelector(`.stask[data-id="${id}"]`);if(el)el.classList.add('dragging-slot');}
   },0);
 }
 function onDragEnd(){
-  state.dragging=null; state.draggingFrom=null;
+  state.dragging=null;state.draggingFrom=null;
   document.querySelectorAll('.ti').forEach(el=>el.classList.remove('dragging'));
   document.querySelectorAll('.stask').forEach(el=>el.classList.remove('dragging-slot'));
   document.querySelectorAll('.trow,.t3s').forEach(el=>el.classList.remove('over'));
@@ -911,22 +817,22 @@ function onDragEnd(){
 function onSlotOver(e,slot){
   e.preventDefault();
   document.querySelectorAll('.trow').forEach(el=>el.classList.remove('over'));
-  const row=document.querySelector(`.trow[data-slot="${slot}"]`); if(row)row.classList.add('over');
+  const row=document.querySelector(`.trow[data-slot="${slot}"]`);if(row)row.classList.add('over');
 }
 function onSlotLeave(el){el.classList.remove('over');}
 function onSlotDrop(e,slot){
   e.preventDefault();
   document.querySelectorAll('.trow').forEach(el=>el.classList.remove('over'));
-  if(!state.dragging) return;
+  if(!state.dragging)return;
   const t=state.tasks.find(x=>x.id===state.dragging);
   if(t){t.slot=slot;saveToday();renderLeft();renderGrid();}
   state.dragging=null;
 }
 function onT3Over(e,i){
   e.preventDefault();
-  if(state.draggingFrom!=='list') return;
+  if(state.draggingFrom!=='list')return;
   document.querySelectorAll('.t3s').forEach(el=>el.classList.remove('over'));
-  const el=document.getElementById('t3-'+i); if(el)el.classList.add('over');
+  const el=document.getElementById('t3-'+i);if(el)el.classList.add('over');
 }
 function onT3Leave(el){el.classList.remove('over');}
 function onT3Drop(e,i){
@@ -939,15 +845,58 @@ function onT3Drop(e,i){
   }
 }
 
+/* ── RESIZE ── */
+let rsState=null;
+function startResize(e,taskId,startDur){
+  e.stopPropagation();e.preventDefault();
+  rsState={taskId,startY:e.clientY,startDur,curDur:startDur};
+  document.addEventListener('mousemove',onResizeMove);
+  document.addEventListener('mouseup',onResizeEnd);
+  document.body.style.cursor='ns-resize';
+  document.body.style.userSelect='none';
+}
+function onResizeMove(e){
+  if(!rsState)return;
+  const dy=e.clientY-rsState.startY;
+  const delta=Math.round(dy/SLOT_H);
+  const newDur=Math.max(1,Math.min(16,rsState.startDur+delta));
+  if(newDur!==rsState.curDur){
+    rsState.curDur=newDur;
+    const el=document.querySelector(`.stask[data-id="${rsState.taskId}"]`);
+    if(el){
+      el.style.height=(newDur*SLOT_H-4)+'px';
+      const lbl=el.querySelector('.st-dur');
+      if(lbl)lbl.textContent=newDur>1?`${newDur*30}분`:'';
+      else if(newDur>1){
+        const top=el.querySelector('.st-top');
+        const rm=top.querySelector('.st-rm');
+        const sp=document.createElement('span');
+        sp.className='st-dur';sp.textContent=`${newDur*30}분`;
+        top.insertBefore(sp,rm);
+      }
+    }
+  }
+}
+function onResizeEnd(){
+  if(!rsState)return;
+  const t=state.tasks.find(x=>x.id===rsState.taskId);
+  if(t){t.duration=rsState.curDur;saveToday();renderLeft();}
+  rsState=null;
+  document.removeEventListener('mousemove',onResizeMove);
+  document.removeEventListener('mouseup',onResizeEnd);
+  document.body.style.cursor='';
+  document.body.style.userSelect='';
+}
+
 /* ── RENDER ── */
 function renderProg(){
-  const total=state.tasks.length, done=state.tasks.filter(t=>t.completed).length;
+  const total=state.tasks.length,done=state.tasks.filter(t=>t.completed).length;
   const pct=total>0?Math.round((done/total)*100):0;
   const p=document.getElementById('hdr-prog');
   if(total>0){p.innerHTML=`<span class="pd">${done}</span><span style="color:var(--t4)">/${total}</span><span class="pp">${pct}%</span>`;p.classList.remove('hidden');}
   else p.classList.add('hidden');
   const f=document.getElementById('prog-fill');
-  f.style.width=pct+'%'; f.style.background=pct===100?'var(--green)':'var(--accent)';
+  f.style.width=pct+'%';f.style.background=pct===100?'var(--green)':'var(--accent)';
 }
 function renderCarryover(){
   const sec=document.getElementById('carry-sec');
@@ -959,9 +908,9 @@ function renderCarryover(){
     <button class="carry-btn" onclick="pullCarryover('${t.id}')">+</button></div>`).join('');
 }
 function renderLeft(){
-  const unsch=state.tasks.filter(t=>!t.slot), sch=state.tasks.filter(t=>t.slot);
+  const unsch=state.tasks.filter(t=>!t.slot),sch=state.tasks.filter(t=>t.slot);
   let h=`<div class="sub-lbl">미배정 (${unsch.length})<span style="font-size:8px;color:var(--t4);margin-left:5px">▸ 드래그해서 배정</span></div>`;
-  if(!unsch.length) h+=`<div class="empty-msg">할 일을 추가해보세요</div>`;
+  if(!unsch.length)h+=`<div class="empty-msg">할 일을 추가해보세요</div>`;
   else unsch.forEach(t=>{h+=`
     <div class="ti ${t.completed?'done-ti':''}" data-id="${t.id}" draggable="true"
       ondragstart="onDragStart(event,'${t.id}','list')" ondragend="onDragEnd()">
@@ -984,7 +933,7 @@ function renderLeft(){
 function renderTop3(){
   const H=['가장 중요한 일...','두 번째 중요한 일...','세 번째 중요한 일...'];
   document.getElementById('top3-list').innerHTML=state.top3.map((s,i)=>{
-    const f=!!s.text, cls='t3s'+(f?' filled':'')+(s.completed&&f?' done-slot':'');
+    const f=!!s.text,cls='t3s'+(f?' filled':'')+(s.completed&&f?' done-slot':'');
     return `<div class="${cls}" id="t3-${i}" ondragover="onT3Over(event,${i})" ondragleave="onT3Leave(this)" ondrop="onT3Drop(event,${i})">
       <span class="t3-num">${i+1}</span>
       ${f?`<button class="t3-chk ${s.completed?'ck':''}" onclick="toggleTop3(${i})">${s.completed?'✓':''}</button>
@@ -1007,11 +956,11 @@ function renderGoals(){
     </div>`).join('');
 }
 function renderMonthGoals(){
-  const yr=state.viewMonth.getFullYear(), mo=state.viewMonth.getMonth();
+  const yr=state.viewMonth.getFullYear(),mo=state.viewMonth.getMonth();
   const gk=`${yr}-${String(mo+1).padStart(2,'0')}`;
-  const lbl=document.getElementById('m-mo-lbl'); if(lbl) lbl.textContent=`${mo+1}월`;
+  const lbl=document.getElementById('m-mo-lbl');if(lbl)lbl.textContent=`${mo+1}월`;
   let goals=gk===MK?state.goals:(()=>{const r=lsGet('goals:'+gk);return r?JSON.parse(r):[];})();
-  const list=document.getElementById('mg-list'); if(!list) return;
+  const list=document.getElementById('mg-list');if(!list)return;
   if(!goals.length){list.innerHTML=`<div style="font-size:10px;color:var(--t4);padding:4px 0">목표를 추가해보세요</div>`;return;}
   list.innerHTML=goals.map(g=>`
     <div class="gi">
@@ -1020,143 +969,72 @@ function renderMonthGoals(){
       <button class="g-del" onclick="removeGoalByKey('${g.id}','${gk}')">×</button>
     </div>`).join('');
 }
-const SLOT_H = 40; // px per 30-min slot
-
 function buildTimeGrid(){
   document.getElementById('tgrid-inner').innerHTML=SLOTS.map(slot=>{
-    const isH=slot.endsWith(':00'), h=parseInt(slot.split(':')[0]);
-    const h12=h>12?h-12:(h===0?12:h), ap=h>=12?'PM':'AM';
+    const isH=slot.endsWith(':00'),h=parseInt(slot.split(':')[0]);
+    const h12=h>12?h-12:(h===0?12:h),ap=h>=12?'PM':'AM';
     const label=isH?`<span class="tl-h">${String(h12).padStart(2,'0')}:00</span><span class="tl-ap">${ap}</span>`
       :`<span class="tl-30">${String(h12).padStart(2,'0')}:30</span>`;
-    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:40px"
+    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:${SLOT_H}px"
       ondragover="onSlotOver(event,'${slot}')" ondragleave="onSlotLeave(this)" ondrop="onSlotDrop(event,'${slot}')">
       <div class="tlabel">${label}</div>
       <div class="ttasks" id="ts-${slot.replace(':','-')}"></div>
     </div>`;
   }).join('');
 }
-
 function renderGrid(){
-  // Clear all slot containers
   SLOTS.forEach(s=>{const el=document.getElementById('ts-'+s.replace(':','-'));if(el)el.innerHTML='';});
-
-  // Render scheduled tasks — one task per slot (absolute positioned, can span)
   state.tasks.filter(t=>t.slot).forEach(t=>{
-    const slotEl=document.getElementById('ts-'+t.slot.replace(':','-')); if(!slotEl) return;
-    const dur=Math.max(1, t.duration||1);
-    const taskH = dur * SLOT_H - 4; // 4px gap
-
+    const el=document.getElementById('ts-'+t.slot.replace(':','-'));if(!el)return;
+    const dur=Math.max(1,t.duration||1);
+    const taskH=dur*SLOT_H-4;
     const d=document.createElement('div');
     d.className='stask'+(t.completed?' done':'');
-    d.setAttribute('data-id',t.id);
-    d.setAttribute('draggable','true');
-    d.style.height = taskH+'px';
-    d.style.top = '2px';
-
-    // Duration label (only if > 1 slot)
-    const durLabel = dur>1 ? `<span class="st-dur">${dur*30}분</span>` : '';
-
-    d.innerHTML=`
-      <div class="st-top">
-        <button class="st-chk" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
-        <span class="st-txt" title="${esc(t.text)}">${esc(t.text)}</span>
-        ${durLabel}
-        <button class="st-rm" onclick="unslot('${t.id}')">↩</button>
-      </div>
-      <div class="st-resize" data-id="${t.id}" title="드래그해서 시간 늘리기">
-        <div class="st-resize-bar"></div>
-      </div>`;
-
-    d.addEventListener('dragstart',e=>{
-      if(e.target.closest('.st-resize')) { e.preventDefault(); return; }
-      onDragStart(e,t.id,'slot',t.slot);
-    });
+    d.setAttribute('data-id',t.id);d.setAttribute('draggable','true');
+    d.style.height=taskH+'px';
+    const durLabel=dur>1?`<span class="st-dur">${dur*30}분</span>`:'';
+    d.innerHTML=`<div class="st-top">
+      <button class="st-chk" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
+      <span class="st-txt" title="${esc(t.text)}">${esc(t.text)}</span>
+      ${durLabel}
+      <button class="st-rm" onclick="unslot('${t.id}')">↩</button>
+    </div>
+    <div class="st-resize" data-id="${t.id}" title="드래그해서 시간 늘리기">
+      <div class="st-resize-bar"></div>
+    </div>`;
+    d.addEventListener('dragstart',e=>{if(e.target.closest('.st-resize')){e.preventDefault();return;}onDragStart(e,t.id,'slot',t.slot);});
     d.addEventListener('dragend',onDragEnd);
-
-    // Resize handle — mousedown
-    const handle=d.querySelector('.st-resize');
-    handle.addEventListener('mousedown',e=>{
-      e.stopPropagation(); e.preventDefault();
-      startResize(e, t.id, dur);
-    });
-
-    slotEl.appendChild(d);
+    d.querySelector('.st-resize').addEventListener('mousedown',e=>startResize(e,t.id,dur));
+    el.appendChild(d);
   });
-}
-
-/* ── RESIZE LOGIC ── */
-let resizeState=null;
-function startResize(e, taskId, startDur){
-  resizeState={taskId, startY:e.clientY, startDur, curDur:startDur};
-  document.addEventListener('mousemove', onResizeMove);
-  document.addEventListener('mouseup', onResizeEnd);
-  document.body.style.cursor='ns-resize';
-  document.body.style.userSelect='none';
-}
-function onResizeMove(e){
-  if(!resizeState) return;
-  const dy = e.clientY - resizeState.startY;
-  const slotsDelta = Math.round(dy / SLOT_H);
-  const newDur = Math.max(1, Math.min(16, resizeState.startDur + slotsDelta));
-  if(newDur !== resizeState.curDur){
-    resizeState.curDur = newDur;
-    const t = state.tasks.find(x=>x.id===resizeState.taskId);
-    if(t){
-      t.duration = newDur;
-      // Live update just this task's element
-      const el=document.querySelector(`.stask[data-id="${resizeState.taskId}"]`);
-      if(el){
-        el.style.height=(newDur*SLOT_H-4)+'px';
-        const lbl=el.querySelector('.st-dur');
-        if(lbl) lbl.textContent=newDur>1?`${newDur*30}분`:'';
-        else if(newDur>1){
-          const top=el.querySelector('.st-top');
-          const rm=top.querySelector('.st-rm');
-          const span=document.createElement('span');
-          span.className='st-dur'; span.textContent=`${newDur*30}분`;
-          top.insertBefore(span,rm);
-        }
-      }
-    }
-  }
-}
-function onResizeEnd(){
-  if(!resizeState) return;
-  const t=state.tasks.find(x=>x.id===resizeState.taskId);
-  if(t){ t.duration=resizeState.curDur; saveToday(); renderLeft(); }
-  resizeState=null;
-  document.removeEventListener('mousemove',onResizeMove);
-  document.removeEventListener('mouseup',onResizeEnd);
-  document.body.style.cursor='';
-  document.body.style.userSelect='';
 }
 function setView(v){
   state.view=v;
   document.getElementById('today').classList.toggle('hidden',v!=='today');
   document.getElementById('month').classList.toggle('hidden',v!=='month');
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='month') loadMonth();
+  if(v==='month')loadMonth();
 }
 function changeMonth(d){
   state.viewMonth=new Date(state.viewMonth.getFullYear(),state.viewMonth.getMonth()+d,1);
-  state.selectedDay=null; loadMonth();
+  state.selectedDay=null;loadMonth();
 }
 function loadMonth(){
-  const yr=state.viewMonth.getFullYear(), mo=state.viewMonth.getMonth();
+  const yr=state.viewMonth.getFullYear(),mo=state.viewMonth.getMonth();
   const days=new Date(yr,mo+1,0).getDate();
   state.monthCache={};
   for(let d=1;d<=days;d++){
     const k=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const r=lsGet(k); if(r) state.monthCache[k]=JSON.parse(r);
+    const r=lsGet(k);if(r)state.monthCache[k]=JSON.parse(r);
   }
-  if(yr===TODAY.getFullYear()&&mo===TODAY.getMonth()) state.monthCache[TK]=state.tasks;
-  renderMonth(); renderMonthGoals(); renderBooks();
+  if(yr===TODAY.getFullYear()&&mo===TODAY.getMonth())state.monthCache[TK]=state.tasks;
+  renderMonth();renderMonthGoals();renderBooks();
 }
 function renderMonth(){
-  const yr=state.viewMonth.getFullYear(), mo=state.viewMonth.getMonth();
+  const yr=state.viewMonth.getFullYear(),mo=state.viewMonth.getMonth();
   document.getElementById('mtitle').textContent=`${yr}년 ${mo+1}월`;
-  const firstDay=new Date(yr,mo,1).getDay(), daysInMonth=new Date(yr,mo+1,0).getDate();
-  const cells=[]; for(let i=0;i<firstDay;i++)cells.push(null);
+  const firstDay=new Date(yr,mo,1).getDay(),daysInMonth=new Date(yr,mo+1,0).getDate();
+  const cells=[];for(let i=0;i<firstDay;i++)cells.push(null);
   for(let d=1;d<=daysInMonth;d++)cells.push(d);
   while(cells.length%7!==0)cells.push(null);
   let h='';
@@ -1164,52 +1042,36 @@ function renderMonth(){
     if(!day){h+=`<div class="dcell empty"></div>`;return;}
     const k=`${yr}-${String(mo+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const dt=state.monthCache[k]||[];
-    const tot=dt.length, dn=dt.filter(t=>t.completed).length;
-    const isToday=k===TK, isSel=k===state.selectedDay;
-    const isFuture=k>TK;
+    const tot=dt.length,dn=dt.filter(t=>t.completed).length;
+    const isToday=k===TK,isSel=k===state.selectedDay,isFuture=k>TK;
     const dow=new Date(yr,mo,day).getDay();
-    let nc=dow===0?'su':dow===6?'sa':'r'; if(isToday) nc='t';
+    let nc=dow===0?'su':dow===6?'sa':'r';if(isToday)nc='t';
     const pct=tot>0?Math.round((dn/tot)*100):0;
     const bc=(dn===tot&&tot>0)?'var(--green)':'var(--accent)';
-
-    // Date number + pct
     const pctTxt=tot>0?`<span style="font-size:8px;color:${dn===tot?'var(--green)':'var(--t4)'}">${pct}%</span>`:'';
-    let inner=`<div class="dn ${nc}"><span>${day}${isToday?' <span style="font-size:8px;color:var(--accent);margin-left:2px">오늘</span>':''}</span>${pctTxt}</div>`;
-
-    // Task items (max 4)
-    if(dt.length){
-      const show=dt.slice(0,4);
-      show.forEach(t=>{
-        inner+=`<div class="d-task ${t.completed?'done-t':''}">
-          <span class="dt-dot">${t.completed?'✓':'·'}</span>
-          <span class="dt-txt">${esc(t.text)}</span>
+    let inner=`<div class="dc-num ${nc}"><span>${day}${isToday?` <span style="font-size:7px">오늘</span>`:''}</span>${pctTxt}</div>`;
+    if(!isFuture&&dt.length){
+      dt.slice(0,4).forEach(t=>{
+        inner+=`<div class="d-task ${t.completed?'dn':''}">
+          <span class="dot">${t.completed?'✓':'·'}</span>
+          <span class="txt">${esc(t.text)}</span>
         </div>`;
       });
-      if(dt.length>4) inner+=`<div class="d-more">+${dt.length-4}개 더</div>`;
+      if(dt.length>4)inner+=`<div class="d-more">+${dt.length-4}개 더</div>`;
       inner+=`<div class="dbar"><div class="dbar-f" style="width:${pct}%;background:${bc}"></div></div>`;
     }
-
-    // Future plans
     if(isFuture){
-      const planRaw=lsGet('plan:'+k);
-      const plans=planRaw?JSON.parse(planRaw):[];
+      const pr=lsGet('plan:'+k);const plans=pr?JSON.parse(pr):[];
       plans.slice(0,3).forEach(p=>{
-        inner+=`<div class="d-task plan-t"><span class="dt-dot" style="color:var(--blue)">▸</span><span class="dt-txt" style="color:#2a4a7a">${esc(p.text)}</span></div>`;
+        inner+=`<div class="d-task pl"><span class="dot" style="color:var(--blue)">▸</span><span class="txt">${esc(p.text)}</span></div>`;
       });
-      if(plans.length>3) inner+=`<div class="d-more" style="color:#1e3a6e">+${plans.length-3}개 계획</div>`;
     }
-
-    // Badges
-    const hasTh=lsGet('thoughts:'+k);
-    const hasPlan=!isFuture&&(()=>{const r=lsGet('plan:'+k);return r&&JSON.parse(r).length>0;})();
-    if(hasTh||hasPlan||(!isFuture&&tot>0&&dn===tot)){
-      inner+=`<div class="d-badges">`;
-      if(!isFuture&&tot>0&&dn===tot) inner+=`<span class="d-badge done-all">✓ 완료</span>`;
-      if(hasTh) inner+=`<span class="d-badge th">✦ 생각</span>`;
-      if(hasPlan) inner+=`<span class="d-badge pl">▸ 메모</span>`;
-      inner+=`</div>`;
-    }
-
+    const badges=[];
+    if(!isFuture&&tot>0&&dn===tot)badges.push(`<span class="d-badge done-all">✓ 완료</span>`);
+    else if(!isFuture&&tot>0)badges.push(`<span class="d-badge pct">${pct}%</span>`);
+    if(lsGet('thoughts:'+k))badges.push(`<span class="d-badge th">✦ 생각</span>`);
+    const pr2=lsGet('plan:'+k);if(pr2&&JSON.parse(pr2).length>0)badges.push(`<span class="d-badge pl">▸ 계획</span>`);
+    if(badges.length)inner+=`<div class="d-badges">${badges.join('')}</div>`;
     h+=`<div class="dcell ${isToday?'today':''} ${isSel?'sel':''}" onclick="selectDay('${k}')">${inner}</div>`;
   });
   document.getElementById('calgrid').innerHTML=h;
@@ -1222,15 +1084,15 @@ function renderDetail(){
   el.classList.remove('hidden');
   const k=state.selectedDay;
   const dt=state.monthCache[k]||[];
-  const tot=dt.length, dn=dt.filter(t=>t.completed).length;
+  const tot=dt.length,dn=dt.filter(t=>t.completed).length;
   const pct=tot>0?Math.round((dn/tot)*100):0;
-  const isFuture=k>TK, isToday=k===TK;
+  const isFuture=k>TK,isToday=k===TK;
   let h=`<div class="dd-hdr">
     <span>${k.replace(/-/g,'.')}</span>
-    <span style="font-size:9px;color:${isFuture?'var(--blue)':isToday?'var(--accent)':'var(--t4)'};letter-spacing:1px">${isFuture?'미리 계획':isToday?'오늘':'기록'}</span>
+    <span style="font-size:9px;color:${isFuture?'var(--blue)':isToday?'var(--accent)':'var(--t4)'}">${isFuture?'미리 계획':isToday?'오늘':'기록'}</span>
   </div>`;
   if(!isFuture){
-    if(!dt.length) h+=`<div style="font-size:11px;color:var(--t4);margin-bottom:8px">기록 없음</div>`;
+    if(!dt.length)h+=`<div style="font-size:11px;color:var(--t4);margin-bottom:8px">기록 없음</div>`;
     else{
       h+=dt.map(t=>`<div class="ddr">
         <span style="font-size:12px;flex-shrink:0;color:${t.completed?'var(--green)':'var(--t4)'}">${t.completed?'✓':'○'}</span>
@@ -1241,14 +1103,13 @@ function renderDetail(){
     }
     const thRaw=lsGet('thoughts:'+k);
     const thVal=thRaw?(thRaw.startsWith('"')?JSON.parse(thRaw):thRaw):'';
-    if(thVal&&thVal.trim()) h+=`<div class="dd-thought">${esc(thVal.trim())}</div>`;
+    if(thVal&&thVal.trim())h+=`<div class="dd-thought">${esc(thVal.trim())}</div>`;
   }
   const plans=JSON.parse(lsGet('plan:'+k)||'[]');
   h+=`<div class="dd-plan-section">
     <div class="dd-plan-lbl">${isFuture?'📋 할 일 미리 쓰기':'📌 추가 메모'}</div>
     <div class="dd-plan-row">
-      <input class="dd-plan-input" id="plan-inp-${k}" type="text"
-        placeholder="${isFuture?'이날 할 일을 미리 적어보세요...':'메모 추가...'}" maxlength="100"
+      <input class="dd-plan-input" id="plan-inp-${k}" type="text" placeholder="${isFuture?'이날 할 일을 미리 적어보세요...':'메모 추가...'}" maxlength="100"
         onkeydown="if(event.key==='Enter')addPlan('${k}')">
       <button class="dd-plan-add" onclick="addPlan('${k}')">+</button>
     </div>
@@ -1265,42 +1126,41 @@ function renderDetail(){
 }
 function addPlan(k){
   const inp=document.getElementById('plan-inp-'+k);
-  const txt=inp.value.trim(); if(!txt) return;
+  const txt=inp.value.trim();if(!txt)return;
   const plans=JSON.parse(lsGet('plan:'+k)||'[]');
   plans.push({text:txt,done:false,created:Date.now()});
-  storeSet('plan:'+k,plans); inp.value=''; renderDetail(); renderMonth();
+  storeSet('plan:'+k,plans);inp.value='';renderDetail();renderMonth();
 }
 function togglePlan(k,i){
   const plans=JSON.parse(lsGet('plan:'+k)||'[]');
   if(plans[i])plans[i].done=!plans[i].done;
-  storeSet('plan:'+k,plans); renderDetail();
+  storeSet('plan:'+k,plans);renderDetail();
 }
 function removePlan(k,i){
   const plans=JSON.parse(lsGet('plan:'+k)||'[]');
-  plans.splice(i,1); storeSet('plan:'+k,plans); renderDetail(); renderMonth();
+  plans.splice(i,1);storeSet('plan:'+k,plans);renderDetail();renderMonth();
 }
 
 /* ── BOOKS ── */
-const BOOK_KEY='books';
-function loadBooks(){try{return JSON.parse(lsGet(BOOK_KEY)||'[]');}catch{return[];}}
-function saveBooks(b){lsSet(BOOK_KEY,JSON.stringify(b));storeSet(BOOK_KEY,b);}
+function loadBooks(){try{return JSON.parse(lsGet('books')||'[]');}catch{return[];}}
+function saveBooks(b){storeSet('books',b);}
 const BSTATES=['읽는 중','다 읽음','읽고 싶음'];
 function addBook(){
   const inp=document.getElementById('book-input');
-  const txt=inp.value.trim(); if(!txt) return;
-  const books=loadBooks(); books.unshift({id:uid(),title:txt,status:0,added:Date.now()});
-  saveBooks(books); inp.value=''; renderBooks();
+  const txt=inp.value.trim();if(!txt)return;
+  const books=loadBooks();books.unshift({id:uid(),title:txt,status:0,added:Date.now()});
+  saveBooks(books);inp.value='';renderBooks();
 }
 function cycleBookStatus(id){
-  const books=loadBooks(); const b=books.find(x=>x.id===id); if(!b) return;
-  b.status=(b.status+1)%3; saveBooks(books); renderBooks();
+  const books=loadBooks();const b=books.find(x=>x.id===id);if(!b)return;
+  b.status=(b.status+1)%3;saveBooks(books);renderBooks();
 }
 function removeBook(id){saveBooks(loadBooks().filter(x=>x.id!==id));renderBooks();}
 function renderBooks(){
-  const list=document.getElementById('book-list'); if(!list) return;
+  const list=document.getElementById('book-list');if(!list)return;
   const books=loadBooks();
   if(!books.length){list.innerHTML=`<div style="font-size:10px;color:var(--t4);padding:4px 0">읽고 있는 책을 추가해보세요</div>`;return;}
-  const icons=['📖','✅','🔖'], cols=['var(--blue)','var(--green)','var(--purple)'];
+  const icons=['📖','✅','🔖'],cols=['var(--blue)','var(--green)','var(--purple)'];
   list.innerHTML=books.map(b=>`
     <div class="book-item">
       <span class="book-icon">${icons[b.status]}</span>
