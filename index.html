@@ -653,13 +653,42 @@ async function launchApp(){
   document.getElementById('hdr-date').textContent=
     `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${KR[d.getDay()]}요일`;
   document.getElementById('g-mo-lbl').textContent=`${d.getMonth()+1}월`;
+
+  // ── 이전 버전 데이터 마이그레이션 ──
+  migrateOldData();
+
   buildTimeGrid();
-  // Load local first for instant display
   loadLocalData();
   render();
-  // Then pull from cloud and refresh
   const synced=await pullFromCloud();
   if(synced){loadLocalData();render();}
+}
+
+/* 이전 네임스페이스(timebox_v1_, tb:) → 새 네임스페이스(tb_userid_)로 복사 */
+function migrateOldData(){
+  if(cfgGet('migrated_v2')) return; // 이미 마이그레이션 완료
+  let count=0;
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const fullKey=localStorage.key(i); if(!fullKey) continue;
+      let dataKey=null;
+      if(fullKey.startsWith('timebox_v1_')) dataKey=fullKey.slice('timebox_v1_'.length);
+      else if(fullKey.startsWith('tb:')) dataKey=fullKey.slice(3);
+      if(dataKey && !dataKey.startsWith('_') && !lsGet(dataKey)){
+        const val=localStorage.getItem(fullKey);
+        if(val){ lsSet(dataKey,val); count++; }
+      }
+    }
+  }catch(e){}
+  if(count>0){
+    console.log(`[TIMEBOX] 마이그레이션: ${count}개 항목 복원`);
+    // 복원된 데이터를 클라우드에도 업로드
+    setTimeout(async()=>{
+      const keys=lsKeys().filter(k=>!k.startsWith('_'));
+      for(const k of keys){const v=lsGet(k);if(v)await sbSet(k,JSON.parse(v));}
+    },2000);
+  }
+  cfgSet('migrated_v2','1');
 }
 
 function loadLocalData(){
