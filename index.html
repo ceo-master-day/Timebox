@@ -525,18 +525,21 @@ function doSignOut(){
 async function sbFetch(method,path,body){
   if(!SB.token) return null;
   try{
-    const r=await fetch(SB.url+'/rest/v1/'+path,{
-      method,
-      headers:{'apikey':SB.key,'Authorization':'Bearer '+SB.token,'Content-Type':'application/json','Prefer':'return=representation'},
-      body:body?JSON.stringify(body):undefined
-    });
+    const headers={
+      'apikey':SB.key,
+      'Authorization':'Bearer '+SB.token,
+      'Content-Type':'application/json',
+      'Prefer': method==='POST' ? 'return=representation,resolution=merge-duplicates' : 'return=representation'
+    };
+    const r=await fetch(SB.url+'/rest/v1/'+path,{method,headers,body:body?JSON.stringify(body):undefined});
     if(r.status===401){
       const ok=await refreshSession();
       if(!ok){doSignOut();return null;}
       return sbFetch(method,path,body);
     }
     if(!r.ok) return null;
-    return await r.json();
+    const text=await r.text();
+    return text ? JSON.parse(text) : [];
   }catch{return null;}
 }
 
@@ -559,15 +562,37 @@ async function sbSet(dataKey,value){
 async function pullFromCloud(){
   setSyncStatus('syncing');
   try{
-    const rows=await sbFetch('GET',`timebox?user_id=eq.${USER_ID}&select=data_key,data_value`);
-    if(rows){
-      rows.forEach(r=>{try{lsSet(r.data_key,r.data_value);}catch{}});
-      setSyncStatus('ok');
-      return true;
+    const rows=await sbFetch('GET',`timebox?user_id=eq.${encodeURIComponent(USER_ID)}&select=data_key,data_value`);
+    if(rows===null){
+      // 네트워크 오류 — 로컬 데이터 유지
+      setSyncStatus('err');
+      return false;
     }
-  }catch{}
-  setSyncStatus('err');
-  return false;
+    if(rows.length===0){
+      // Supabase가 비어있음 — 로컬 데이터가 있으면 클라우드에 업로드
+      setSyncStatus('ok');
+      const localKeys=lsKeys().filter(k=>!k.startsWith('_'));
+      if(localKeys.length>0){
+        for(const k of localKeys){
+          const v=lsGet(k);
+          if(v) try{await sbSet(k,JSON.parse(v));}catch{}
+        }
+      }
+      return false; // 로컬 데이터 덮어쓰지 않음
+    }
+    // Supabase에 데이터 있음 — 로컬에 저장
+    rows.forEach(r=>{
+      try{
+        lsSet(r.data_key, r.data_value);
+        bkSet(r.data_key, r.data_value);
+      }catch{}
+    });
+    setSyncStatus('ok');
+    return true;
+  }catch{
+    setSyncStatus('err');
+    return false;
+  }
 }
 
 /* ── BACKUP STORAGE (USER_ID 없는 안전 백업, 같은 브라우저에서 버전 업데이트해도 유지) ── */
