@@ -481,7 +481,9 @@ function doSignOut(){
 async function sbFetch(method,path,body){
   if(!SB.token||!SB.ready) return null;
   try{
-    const prefer = method==='POST' ? 'return=representation,resolution=merge-duplicates' : 'return=representation';
+    const prefer = (method==='POST'||method==='PUT')
+      ? 'return=minimal,resolution=merge-duplicates'
+      : 'return=representation';
     const r=await fetch(SB.url+'/rest/v1/'+path,{
       method,
       headers:{'apikey':SB.key,'Authorization':'Bearer '+SB.token,'Content-Type':'application/json','Prefer':prefer},
@@ -492,9 +494,11 @@ async function sbFetch(method,path,body){
       if(!ok){setSyncStatus('err');return null;}
       return sbFetch(method,path,body);
     }
-    if(!r.ok) return null;
-    const txt=await r.text();
-    return txt?JSON.parse(txt):[];
+    if(r.status===204||r.status===201||r.status===200){
+      const txt=await r.text();
+      return txt?JSON.parse(txt):[];
+    }
+    return null;
   }catch{return null;}
 }
 
@@ -508,11 +512,19 @@ function setSyncStatus(s){
 
 async function sbSet(key,value){
   if(!SB.ready||!SB.token||!USER_ID) return false;
+  const enc=encodeURIComponent;
   const row={user_id:USER_ID,data_key:key,data_value:JSON.stringify(value),updated_at:new Date().toISOString()};
-  const r=await sbFetch('POST','timebox?on_conflict=user_id,data_key',row);
-  if(r!==null) setSyncStatus('ok');
-  return r!==null;
+  // 먼저 DELETE 후 INSERT (가장 확실한 upsert)
+  await sbFetch('DELETE',`timebox?user_id=eq.${enc(USER_ID)}&data_key=eq.${enc(key)}`);
+  const r=await sbFetch('POST','timebox',row);
+  if(r!==null){setSyncStatus('ok');return true;}
+  setSyncStatus('err');return false;
 }
+
+// 45분마다 토큰 자동 갱신
+setInterval(()=>{
+  if(SB.ready&&SB.token&&USER_ID) refreshSession().catch(()=>{});
+},45*60*1000);
 
 async function pullFromCloud(){
   if(!SB.ready||!SB.token||!USER_ID){setSyncStatus('local');return false;}
@@ -1172,6 +1184,22 @@ function renderBooks(){
     </div>`).join('');
 }
 function render(){renderCarryover();renderLeft();renderGrid();renderProg();renderTop3();renderGoals();}
+
+/* ── 주기적 동기화 (5분마다 미저장 데이터 재시도) ── */
+setInterval(async()=>{
+  if(!SB.ready||!SB.token||!USER_ID) return;
+  // 토큰 갱신
+  await refreshSession().catch(()=>{});
+  // 로컬 데이터 전체 클라우드에 동기화
+  const keys=lsKeys().filter(k=>!k.startsWith('_'));
+  if(keys.length===0) return;
+  let ok=true;
+  for(const k of keys){
+    const v=lsGet(k);
+    if(v){try{const r=await sbSet(k,JSON.parse(v));if(!r)ok=false;}catch{ok=false;}}
+  }
+  if(ok) setSyncStatus('ok');
+}, 5*60*1000);
 init();
 </script>
 </body>
