@@ -257,6 +257,9 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 /* 인라인 편집 */
 .ti-edit-inp{flex:1;background:var(--s3);border:1px solid var(--accent);color:var(--t1);padding:2px 6px;font-family:inherit;font-size:11px;border-radius:var(--r);outline:none;}
 .ti-edit-inp::placeholder{color:var(--t4)}
+.ti-edit-btn{background:transparent;border:none;color:var(--t4);font-size:11px;padding:0 2px;flex-shrink:0;opacity:0;transition:opacity .12s;cursor:pointer;line-height:1}
+.ti:hover .ti-edit-btn{opacity:.7}
+.ti-edit-btn:hover{opacity:1!important;color:var(--accent)}
 /* 날짜 상세 편집 */
 .ddr{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--b1)}
 .ddr:last-child{border-bottom:none}
@@ -937,18 +940,31 @@ function renderCarryover(){
 }
 /* ── TASK EDIT ── */
 function editTask(id){
-  const el=document.querySelector(`.ti[data-id="${id}"] .ti-text`);
-  if(!el) return;
+  const tiEl=document.querySelector(`.ti[data-id="${id}"]`);
+  if(!tiEl) return;
   const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  const textEl=tiEl.querySelector('.ti-text');
+  const editBtn=tiEl.querySelector('.ti-edit-btn');
+  if(!textEl) return;
+
+  // 이미 편집 중이면 무시
+  if(tiEl.querySelector('.ti-edit-inp')) return;
+
+  // draggable 잠시 끄기
+  tiEl.setAttribute('draggable','false');
+
   const inp=document.createElement('input');
   inp.className='ti-edit-inp';
   inp.value=t.text;
   inp.maxLength=120;
-  el.replaceWith(inp);
+  textEl.replaceWith(inp);
+  if(editBtn) editBtn.style.display='none';
   inp.focus();inp.select();
+
   const commit=()=>{
     const v=inp.value.trim();
-    if(v&&v!==t.text){t.text=v;saveToday();
+    if(v&&v!==t.text){
+      t.text=v; saveToday();
       const s=state.top3.find(x=>x.taskId===id);
       if(s){s.text=v;saveT3();}
     }
@@ -956,11 +972,12 @@ function editTask(id){
   };
   inp.addEventListener('blur',commit);
   inp.addEventListener('keydown',e=>{
-    if(e.key==='Enter'){inp.blur();}
+    if(e.key==='Enter'){e.preventDefault();inp.blur();}
     if(e.key==='Escape'){renderLeft();}
     e.stopPropagation();
   });
 }
+
 function renderLeft(){
   const unsch=state.tasks.filter(t=>!t.slot),sch=state.tasks.filter(t=>t.slot);
   let h=`<div class="sub-lbl">미배정 (${unsch.length})<span style="font-size:8px;color:var(--t4);margin-left:5px">▸ 드래그해서 배정</span></div>`;
@@ -969,7 +986,8 @@ function renderLeft(){
     <div class="ti ${t.completed?'done-ti':''}" data-id="${t.id}" draggable="true"
       ondragstart="onDragStart(event,'${t.id}','list')" ondragend="onDragEnd()">
       <button class="ti-check ${t.completed?'ck':''}" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
-      <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}" ondblclick="editTask('${t.id}')">${esc(t.text)}</span>
+      <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}">${esc(t.text)}</span>
+      <button class="ti-edit-btn" onclick="editTask('${t.id}')" title="편집">✎</button>
       <button class="ti-del" onclick="removeTask('${t.id}')">×</button>
     </div>`;});
   if(sch.length){
@@ -978,14 +996,12 @@ function renderLeft(){
       <div class="ti ${t.completed?'done-ti':''}" data-id="${t.id}" style="opacity:${t.completed?.4:.72}">
         <button class="ti-check ${t.completed?'ck':''}" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
         <span class="ti-slot">${t.slot}</span>
-        <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}" ondblclick="editTask('${t.id}')">${esc(t.text)}</span>
+        <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}">${esc(t.text)}</span>
+        <button class="ti-edit-btn" onclick="editTask('${t.id}')" title="편집">✎</button>
         <button class="ti-unslot" onclick="unslot('${t.id}')">↩</button>
       </div>`;});
   }
   document.getElementById('tlist').innerHTML=h;
-  // hint
-  const hint=document.getElementById('tlist').querySelector('.sub-lbl');
-  if(hint) hint.title='더블클릭으로 편집';
 }
 function renderTop3(){
   const H=['가장 중요한 일...','두 번째 중요한 일...','세 번째 중요한 일...'];
