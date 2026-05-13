@@ -254,6 +254,22 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 .book-status{font-size:9px;color:var(--blue);margin-top:2px;cursor:pointer;letter-spacing:.5px}
 .book-status:hover{color:var(--t1)}
 .book-del{background:transparent;border:none;color:var(--red);font-size:12px;padding:0 2px;opacity:0;transition:opacity .12s;flex-shrink:0}
+/* 인라인 편집 */
+.ti-edit-inp{flex:1;background:var(--s3);border:1px solid var(--accent);color:var(--t1);padding:2px 6px;font-family:inherit;font-size:11px;border-radius:var(--r);outline:none;}
+.ti-edit-inp::placeholder{color:var(--t4)}
+/* 날짜 상세 편집 */
+.ddr{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--b1)}
+.ddr:last-child{border-bottom:none}
+.ddr:hover .ddr-del{opacity:.7}
+.ddr-del{background:transparent;border:none;color:var(--t3);font-size:13px;padding:0 2px;flex-shrink:0;opacity:0;transition:opacity .12s;cursor:pointer}
+.ddr-del:hover{color:var(--red);opacity:1!important}
+.ddr-inp{flex:1;background:var(--s3);border:1px solid var(--b2);color:var(--t1);padding:4px 7px;font-family:inherit;font-size:11px;border-radius:var(--r);outline:none;transition:border-color .15s}
+.ddr-inp:focus{border-color:var(--accent)}
+.dd-add-row{display:flex;gap:6px;margin-top:10px}
+.dd-add-inp{flex:1;background:var(--s3);border:1px solid var(--b2);color:var(--t1);padding:6px 9px;font-family:inherit;font-size:11px;border-radius:var(--r);outline:none}
+.dd-add-inp:focus{border-color:var(--accent)}.dd-add-inp::placeholder{color:var(--t4)}
+.dd-add-btn{width:28px;height:28px;background:var(--accent);border:none;color:#0b0c0e;font-size:18px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;cursor:pointer}
+.dd-section-lbl{font-size:9px;letter-spacing:2px;color:var(--t3);margin:10px 0 6px;font-weight:600;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -919,6 +935,32 @@ function renderCarryover(){
     <div class="carry"><span class="carry-txt" title="${esc(t.text)}">${esc(t.text)}</span>
     <button class="carry-btn" onclick="pullCarryover('${t.id}')">+</button></div>`).join('');
 }
+/* ── TASK EDIT ── */
+function editTask(id){
+  const el=document.querySelector(`.ti[data-id="${id}"] .ti-text`);
+  if(!el) return;
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  const inp=document.createElement('input');
+  inp.className='ti-edit-inp';
+  inp.value=t.text;
+  inp.maxLength=120;
+  el.replaceWith(inp);
+  inp.focus();inp.select();
+  const commit=()=>{
+    const v=inp.value.trim();
+    if(v&&v!==t.text){t.text=v;saveToday();
+      const s=state.top3.find(x=>x.taskId===id);
+      if(s){s.text=v;saveT3();}
+    }
+    renderLeft();renderGrid();renderTop3();
+  };
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){inp.blur();}
+    if(e.key==='Escape'){renderLeft();}
+    e.stopPropagation();
+  });
+}
 function renderLeft(){
   const unsch=state.tasks.filter(t=>!t.slot),sch=state.tasks.filter(t=>t.slot);
   let h=`<div class="sub-lbl">미배정 (${unsch.length})<span style="font-size:8px;color:var(--t4);margin-left:5px">▸ 드래그해서 배정</span></div>`;
@@ -927,7 +969,7 @@ function renderLeft(){
     <div class="ti ${t.completed?'done-ti':''}" data-id="${t.id}" draggable="true"
       ondragstart="onDragStart(event,'${t.id}','list')" ondragend="onDragEnd()">
       <button class="ti-check ${t.completed?'ck':''}" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
-      <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}">${esc(t.text)}</span>
+      <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}" ondblclick="editTask('${t.id}')">${esc(t.text)}</span>
       <button class="ti-del" onclick="removeTask('${t.id}')">×</button>
     </div>`;});
   if(sch.length){
@@ -936,11 +978,14 @@ function renderLeft(){
       <div class="ti ${t.completed?'done-ti':''}" data-id="${t.id}" style="opacity:${t.completed?.4:.72}">
         <button class="ti-check ${t.completed?'ck':''}" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
         <span class="ti-slot">${t.slot}</span>
-        <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}">${esc(t.text)}</span>
+        <span class="ti-text ${t.completed?'done':''}" title="${esc(t.text)}" ondblclick="editTask('${t.id}')">${esc(t.text)}</span>
         <button class="ti-unslot" onclick="unslot('${t.id}')">↩</button>
       </div>`;});
   }
   document.getElementById('tlist').innerHTML=h;
+  // hint
+  const hint=document.getElementById('tlist').querySelector('.sub-lbl');
+  if(hint) hint.title='더블클릭으로 편집';
 }
 function renderTop3(){
   const H=['가장 중요한 일...','두 번째 중요한 일...','세 번째 중요한 일...'];
@@ -1090,6 +1135,7 @@ function renderMonth(){
   renderDetail();
 }
 function selectDay(k){state.selectedDay=state.selectedDay===k?null:k;renderMonth();}
+
 function renderDetail(){
   const el=document.getElementById('ddetail');
   if(!state.selectedDay){el.classList.add('hidden');return;}
@@ -1103,23 +1149,43 @@ function renderDetail(){
     <span>${k.replace(/-/g,'.')}</span>
     <span style="font-size:9px;color:${isFuture?'var(--blue)':isToday?'var(--accent)':'var(--t4)'}">${isFuture?'미리 계획':isToday?'오늘':'기록'}</span>
   </div>`;
+
+  // 할 일 섹션 (수정 가능)
   if(!isFuture){
-    if(!dt.length)h+=`<div style="font-size:11px;color:var(--t4);margin-bottom:8px">기록 없음</div>`;
+    h+=`<div class="dd-section-lbl">할 일</div>`;
+    if(!dt.length) h+=`<div style="font-size:11px;color:var(--t4);margin-bottom:4px">기록 없음</div>`;
     else{
-      h+=dt.map(t=>`<div class="ddr">
-        <span style="font-size:12px;flex-shrink:0;color:${t.completed?'var(--green)':'var(--t4)'}">${t.completed?'✓':'○'}</span>
-        ${t.slot?`<span class="dd-slot">${t.slot}</span>`:`<span style="width:34px;flex-shrink:0;display:inline-block"></span>`}
-        <span class="dd-txt ${t.completed?'done':''}">${esc(t.text)}</span>
-      </div>`).join('');
+      h+=dt.map(t=>`
+        <div class="ddr">
+          <button onclick="ddToggle('${k}','${t.id}')" style="font-size:12px;flex-shrink:0;background:transparent;border:none;cursor:pointer;color:${t.completed?'var(--green)':'var(--t4)'};padding:0 2px">${t.completed?'✓':'○'}</button>
+          ${t.slot?`<span class="dd-slot">${t.slot}</span>`:`<span style="width:34px;flex-shrink:0;display:inline-block"></span>`}
+          <input class="ddr-inp" value="${esc(t.text)}"
+            onblur="ddSaveTask('${k}','${t.id}',this.value)"
+            onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')this.value='${esc(t.text)}';">
+          <button class="ddr-del" onclick="ddRemoveTask('${k}','${t.id}')">×</button>
+        </div>`).join('');
       h+=`<div class="dd-foot">완료율 <span style="color:var(--green);font-weight:500">${pct}%</span> · ${dn}/${tot} 완료</div>`;
     }
+    // 할 일 추가
+    h+=`<div class="dd-add-row">
+      <input class="dd-add-inp" id="dd-add-${k}" type="text" placeholder="할 일 추가..." maxlength="120"
+        onkeydown="if(event.key==='Enter')ddAddTask('${k}')">
+      <button class="dd-add-btn" onclick="ddAddTask('${k}')">+</button>
+    </div>`;
+
+    // 생각 기록
     const thRaw=lsGet('thoughts:'+k);
     const thVal=thRaw?(thRaw.startsWith('"')?JSON.parse(thRaw):thRaw):'';
-    if(thVal&&thVal.trim())h+=`<div class="dd-thought">${esc(thVal.trim())}</div>`;
+    if(thVal&&thVal.trim()){
+      h+=`<div class="dd-section-lbl">오늘의 생각</div>`;
+      h+=`<div class="dd-thought">${esc(thVal.trim())}</div>`;
+    }
   }
+
+  // 계획/메모 섹션
   const plans=JSON.parse(lsGet('plan:'+k)||'[]');
   h+=`<div class="dd-plan-section">
-    <div class="dd-plan-lbl">${isFuture?'📋 할 일 미리 쓰기':'📌 추가 메모'}</div>
+    <div class="dd-plan-lbl">${isFuture?'📋 할 일 미리 쓰기':'📌 메모'}</div>
     <div class="dd-plan-row">
       <input class="dd-plan-input" id="plan-inp-${k}" type="text" placeholder="${isFuture?'이날 할 일을 미리 적어보세요...':'메모 추가...'}" maxlength="100"
         onkeydown="if(event.key==='Enter')addPlan('${k}')">
@@ -1129,12 +1195,57 @@ function renderDetail(){
       ${plans.map((p,i)=>`
         <div class="dd-plan-item">
           <button class="dd-plan-chk ${p.done?'ck':''}" onclick="togglePlan('${k}',${i})">${p.done?'✓':''}</button>
-          <span class="dd-plan-txt ${p.done?'done':''}">${esc(p.text)}</span>
+          <input style="flex:1;background:transparent;border:none;border-bottom:1px solid var(--b2);color:var(--t1);font-family:inherit;font-size:11px;outline:none;padding:2px 4px;${p.done?'text-decoration:line-through;color:var(--t4);':''}"
+            value="${esc(p.text)}"
+            onblur="savePlanText('${k}',${i},this.value)"
+            onkeydown="if(event.key==='Enter')this.blur();">
           <button class="dd-plan-del" onclick="removePlan('${k}',${i})">×</button>
         </div>`).join('')}
     </div>
   </div>`;
   el.innerHTML=h;
+}
+
+/* ── DAY DETAIL TASK EDIT ── */
+function getDayTasks(k){
+  if(k===TK) return state.tasks;
+  const r=lsGet(k); return r?JSON.parse(r):[];
+}
+function saveDayTasks(k,tasks){
+  if(k===TK){state.tasks=tasks;saveToday();renderLeft();renderGrid();renderProg();}
+  else{storeSet(k,tasks);state.monthCache[k]=tasks;}
+  renderMonth();
+}
+function ddToggle(k,id){
+  const tasks=getDayTasks(k);
+  const t=tasks.find(x=>x.id===id); if(!t) return;
+  t.completed=!t.completed; t.completedAt=t.completed?Date.now():null;
+  saveDayTasks(k,tasks);
+}
+function ddSaveTask(k,id,val){
+  const v=val.trim(); if(!v) return;
+  const tasks=getDayTasks(k);
+  const t=tasks.find(x=>x.id===id); if(!t||t.text===v) return;
+  t.text=v; saveDayTasks(k,tasks);
+  // top3 sync
+  if(k===TK){const s=state.top3.find(x=>x.taskId===id);if(s){s.text=v;saveT3();renderTop3();}}
+}
+function ddRemoveTask(k,id){
+  const tasks=getDayTasks(k).filter(x=>x.id!==id);
+  saveDayTasks(k,tasks);
+}
+function ddAddTask(k){
+  const inp=document.getElementById('dd-add-'+k);
+  const txt=inp.value.trim(); if(!txt) return;
+  const tasks=getDayTasks(k);
+  tasks.push({id:uid(),text:txt,completed:false,slot:null,duration:1,created:Date.now()});
+  saveDayTasks(k,tasks); inp.value='';
+}
+function savePlanText(k,i,val){
+  const plans=JSON.parse(lsGet('plan:'+k)||'[]');
+  if(plans[i]&&plans[i].text!==val.trim()&&val.trim()){
+    plans[i].text=val.trim(); storeSet('plan:'+k,plans);
+  }
 }
 function addPlan(k){
   const inp=document.getElementById('plan-inp-'+k);
