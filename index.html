@@ -605,11 +605,10 @@ CREATE POLICY "open" ON timebox FOR ALL USING (true) WITH CHECK (true);`;
   });
 }
 function saveSetup(){
-  const url=document.getElementById('s-url').value.trim();
-  const key=document.getElementById('s-key').value.trim();
-  const err=document.getElementById('setup-err');
-  if(!url||!key){err.textContent='URL과 키를 모두 입력해주세요.';err.classList.add('show');return;}
-  if(!url.includes('supabase')){err.textContent='올바른 Supabase URL을 입력해주세요.';err.classList.add('show');return;}
+  const url=(document.getElementById('s-url').value||'').trim();
+  const key=(document.getElementById('s-key').value||'').trim();
+  if(!url||!key){alert('URL과 API 키를 모두 입력해주세요.');return;}
+  if(!url.includes('supabase')){alert('올바른 Supabase URL을 입력해주세요.\n예: https://xxxx.supabase.co');return;}
   cfgSet('sb_url',url);cfgSet('sb_key',key);
   SB.url=url.replace(/\/$/,'');SB.key=key;SB.ready=true;
   document.getElementById('setup-wrap').classList.add('hidden');
