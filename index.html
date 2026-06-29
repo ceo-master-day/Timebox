@@ -117,12 +117,11 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 /* GRID */
 #tgrid{flex:1;overflow-y:auto;background:var(--bg)}
 #tgrid-inner{position:relative}
-.trow{display:flex;height:120px;border-bottom:1px solid var(--b1);flex-shrink:0;position:relative;overflow:visible}
-.trow.half{border-bottom:1px dashed var(--s3)}
+.trow{display:flex;height:40px;flex-shrink:0;position:relative;overflow:visible}
 .trow.over{background:rgba(240,160,48,.1)!important;outline:1px solid var(--accent)}
-.tlabel{width:70px;flex-shrink:0;padding:6px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:120px;z-index:1;position:relative}
+.tlabel{width:70px;flex-shrink:0;padding:3px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:40px;z-index:1;position:relative}
 .tl-h{font-size:11px;color:var(--t2);font-weight:500}.tl-ap{font-size:8px;color:var(--accent);margin-top:1px}.tl-30{font-size:9px;color:var(--t4)}
-.ttasks{flex:1;position:relative;overflow:visible;height:120px}
+.ttasks{flex:1;position:relative;overflow:visible;height:40px}
 .stask{position:absolute;left:8px;right:8px;top:2px;display:flex;flex-direction:column;padding:3px 10px 0;border-left:2px solid var(--accent);background:var(--ad);border-radius:0 3px 3px 0;cursor:grab;user-select:none;z-index:3;box-sizing:border-box;min-height:24px;overflow:hidden}
 .stask.done{border-left-color:var(--green);background:var(--gd)}
 .stask.dragging-slot{opacity:.2}
@@ -802,9 +801,13 @@ async function doRelogin(email){
   }
 }
 
-/* ── SLOTS ── */
+/* ── SLOTS (10분 단위) ── */
 const SLOTS=[];
-for(let h=5;h<24;h++){const hh=String(h).padStart(2,'0');SLOTS.push(hh+':00');SLOTS.push(hh+':30');}
+for(let h=5;h<24;h++){
+  for(let m=0;m<60;m+=10){
+    SLOTS.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+  }
+}
 const mk3=()=>[0,1,2].map(()=>({id:uid(),text:'',completed:false,taskId:null}));
 const state={
   view:'today',tasks:[],carryover:[],dragging:null,draggingFrom:null,
@@ -977,9 +980,9 @@ function startResize(e,taskId,startDurMin){
 function onResizeMove(e){
   if(!rsState)return;
   const dy=e.clientY-rsState.startY;
-  const deltaMins=dy*MIN_PER_PX; // px → 분
+  const deltaMins=dy*MIN_PER_PX;
   const rawMins=rsState.startDurMin+deltaMins;
-  const snapped=Math.round(rawMins/SNAP)*SNAP; // 10분 단위 스냅
+  const snapped=Math.round(rawMins/SNAP)*SNAP;
   const newDur=Math.max(10,Math.min(480,snapped));
   if(newDur!==rsState.curDurMin){
     rsState.curDurMin=newDur;
@@ -1125,23 +1128,6 @@ function renderMonthGoals(){
       <button class="g-del" onclick="removeGoalByKey('${g.id}','${gk}')">×</button>
     </div>`).join('');
 }
-/* slot 문자열 → 30분 행 키 */
-function slotToRow(slot){
-  const [h,m]=slot.split(':').map(Number);
-  return `${String(h).padStart(2,'0')}:${m<30?'00':'30'}`;
-}
-/* slot 문자열 → 행 내 Y 오프셋(px) */
-function slotToOffset(slot){
-  const [,m]=slot.split(':').map(Number);
-  return ((m%30)/30)*SLOT_H;
-}
-/* Y 위치 + 30분 행 슬롯 → 10분 단위 정밀 슬롯 */
-function yToExactSlot(yInRow, baseSlot){
-  const [h,m]=baseSlot.split(':').map(Number);
-  const minOff=Math.round((yInRow/SLOT_H)*30/10)*10;
-  const clamp=Math.max(0,Math.min(20,minOff));
-  return `${String(h).padStart(2,'0')}:${String(m+clamp).padStart(2,'0')}`;
-}
 function getDurMin(t){return t.duration||30;}
 function setDurMin(t,min){t.duration=min;}
 
@@ -1150,18 +1136,19 @@ function migrateDurations(tasks){
   return tasks.map(t=>{
     if(t.durUnit==='min'||!t.duration) return t;
     if(t.duration<=16){
-      // 구버전: 슬롯 수 (1~16) → 분으로 변환
       return {...t, duration:t.duration*30, durUnit:'min'};
     }
-    // 이미 분 단위 (17분 이상)
     return {...t, durUnit:'min'};
   });
 }
-const SLOT_H=120; // 120px = 30분 (10분=36px, 20분=76px, 30분=116px)
-const MIN_PER_PX=30/SLOT_H; // 분/px
-const SNAP=10; // 10분 단위 스냅
 
-function durToH(durMin){return Math.max(24,(durMin/30)*SLOT_H-4);} // 분 → px
+const SLOT_H=40; // 40px = 10분
+const MIN_PER_PX=10/SLOT_H;
+const SNAP=10;
+function durToH(durMin){return Math.max(36,(durMin/10)*SLOT_H-4);}
+function slotToRow(slot){return slot;}
+function slotToOffset(){return 0;}
+function yToExactSlot(y,base){return base;}
 
 function renderGrid(){
   SLOTS.forEach(s=>{const el=document.getElementById('ts-'+s.replace(':','-'));if(el)el.innerHTML='';});
@@ -1230,14 +1217,18 @@ function editDuration(id){
 }
 function buildTimeGrid(){
   document.getElementById('tgrid-inner').innerHTML=SLOTS.map(slot=>{
-    const isH=slot.endsWith(':00'),h=parseInt(slot.split(':')[0]);
-    const h12=h>12?h-12:(h===0?12:h),ap=h>=12?'PM':'AM';
-    const label=isH?`<span class="tl-h">${String(h12).padStart(2,'0')}:00</span><span class="tl-ap">${ap}</span>`
-      :`<span class="tl-30">${String(h12).padStart(2,'0')}:30</span>`;
-    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:120px"
+    const [h,m]=slot.split(':').map(Number);
+    const isHour=m===0, isHalf=m===30;
+    const h12=h>12?h-12:(h===0?12:h), ap=h>=12?'PM':'AM';
+    let label='';
+    if(isHour) label=`<span class="tl-h">${String(h12).padStart(2,'0')}:00</span><span class="tl-ap">${ap}</span>`;
+    else if(isHalf) label=`<span class="tl-30">${String(h12).padStart(2,'0')}:30</span>`;
+    else label=`<span style="font-size:8px;color:var(--t4)">:${String(m).padStart(2,'0')}</span>`;
+    const borderStyle=isHour?'1px solid var(--b1)':isHalf?'1px dashed var(--s3)':'1px solid rgba(30,32,40,.4)';
+    return `<div class="trow" data-slot="${slot}" style="height:${SLOT_H}px;border-bottom:${borderStyle}"
       ondragover="onSlotOver(event,'${slot}')" ondragleave="onSlotLeave(this)" ondrop="onSlotDrop(event,'${slot}')">
-      <div class="tlabel">${label}</div>
-      <div class="ttasks" id="ts-${slot.replace(':','-')}"></div>
+      <div class="tlabel" style="height:${SLOT_H}px">${label}</div>
+      <div class="ttasks" id="ts-${slot.replace(':','-')}" style="height:${SLOT_H}px"></div>
     </div>`;
   }).join('');
 }
