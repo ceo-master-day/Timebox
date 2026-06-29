@@ -683,10 +683,37 @@ function loadLocalData(){
     return null;
   }
   try{const t=get(TK);state.tasks=t?JSON.parse(t):[];}catch{state.tasks=[];}
-  try{const y=get(YK);state.carryover=y?JSON.parse(y).filter(x=>!x.completed):[];}catch{state.carryover=[];}
+  try{
+    const y=get(YK);
+    // Fix1: 이미 이월된 항목은 다시 안 뜨게
+    const carried=JSON.parse(lsGet('carried:'+YK)||'[]');
+    state.carryover=y?JSON.parse(y).filter(x=>!x.completed&&!carried.includes(x.id)):[];
+  }catch{state.carryover=[];}
   try{const t3=get('top3:'+TK);state.top3=t3?JSON.parse(t3):mk3();}catch{state.top3=mk3();}
   try{const g=get('goals:'+MK);state.goals=g?JSON.parse(g):[];}catch{state.goals=[];}
   try{const th=get('thoughts:'+TK);if(th){const ta=document.getElementById('th-ta');if(ta){ta.value=th;updateCC();}}}catch{}
+  // Fix2: 오늘 날짜의 미리 쓴 계획 자동 추가
+  autoAddTodayPlans();
+}
+
+/* Fix2: 미리 쓴 계획 → 오늘 할 일 자동 추가 */
+function autoAddTodayPlans(){
+  if(lsGet('plan_added:'+TK)) return; // 이미 추가됨
+  try{
+    const plans=JSON.parse(lsGet('plan:'+TK)||'[]');
+    const undone=plans.filter(p=>!p.done);
+    if(!undone.length){lsSet('plan_added:'+TK,'1');return;}
+    let added=0;
+    undone.forEach(p=>{
+      if(!state.tasks.find(t=>t.text===p.text)){
+        state.tasks.push({id:uid(),text:p.text,completed:false,slot:null,duration:30,created:Date.now(),fromPlan:true});
+        added++;
+      }
+    });
+    if(added>0) saveToday();
+    lsSet('plan_added:'+TK,'1');
+    bkSet('plan_added:'+TK,'1');
+  }catch{}
 }
 
 function migrateOldData(){
@@ -709,17 +736,70 @@ function migrateOldData(){
 
 /* ── INIT ── */
 async function init(){
-  if(!loadCfg()){return;} // setup screen shows
+  if(!loadCfg()){return;}
   document.getElementById('setup-wrap').classList.add('hidden');
-  const uid_=cfgGet('user_id'),at=cfgGet('access_token');
-  if(uid_&&at){
-    USER_ID=uid_;SB.token=at;
-    document.getElementById('auth-wrap').classList.add('hidden');
+  const uid_=cfgGet('user_id'), at=cfgGet('access_token'), rt=cfgGet('refresh_token');
+  const email=cfgGet('user_email')||'';
+
+  if(uid_&&(at||rt)){
+    USER_ID=uid_; SB.token=at||'';
+    // 먼저 앱 로드 (로컬 데이터 즉시 표시)
     launchApp();
-    // 백그라운드에서 토큰 갱신
-    refreshSession().catch(()=>{});
+    // 토큰 갱신 시도
+    const ok=await refreshSession().catch(()=>false);
+    if(!ok){
+      // 갱신 실패 → 이메일 자동입력 후 비밀번호만 요청
+      showReloginModal(email);
+    }
   }else{
+    // 저장된 세션 없음 → 일반 로그인
+    if(email) document.getElementById('a-email').value=email;
     document.getElementById('auth-wrap').classList.remove('hidden');
+  }
+}
+
+/* 세션 만료 시 미니 재로그인 모달 */
+function showReloginModal(email){
+  const existing=document.getElementById('relogin-modal');
+  if(existing) existing.remove();
+
+  const modal=document.createElement('div');
+  modal.id='relogin-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML=`
+    <div style="background:var(--s1);border:1px solid var(--b2);border-radius:8px;width:340px;max-width:100%;padding:24px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:3px;color:var(--accent);margin-bottom:6px">세션 만료</div>
+      <div style="font-size:10px;color:var(--t3);margin-bottom:20px;line-height:1.6">
+        장기간 미접속으로 로그인이 만료됐어요.<br>비밀번호를 다시 입력해주세요.
+      </div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--t3);margin-bottom:6px;text-transform:uppercase">이메일</div>
+      <div style="background:var(--s3);border:1px solid var(--b2);color:var(--t2);padding:9px 12px;font-size:12px;border-radius:var(--r);margin-bottom:12px">${email}</div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--t3);margin-bottom:6px;text-transform:uppercase">비밀번호</div>
+      <input id="rl-pw" type="password" placeholder="••••••••"
+        style="width:100%;background:var(--s2);border:1px solid var(--b2);color:var(--t1);padding:9px 12px;font-family:inherit;font-size:12px;border-radius:var(--r);outline:none;margin-bottom:12px"
+        onkeydown="if(event.key==='Enter')doRelogin('${email}')">
+      <div id="rl-err" style="font-size:10px;color:var(--red);margin-bottom:10px;display:none;padding:6px 8px;background:var(--rd);border-radius:var(--r)"></div>
+      <button onclick="doRelogin('${email}')"
+        style="width:100%;padding:10px;background:var(--accent);border:none;color:#0b0c0e;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:2px;border-radius:var(--r);cursor:pointer">
+        다시 연결하기
+      </button>
+    </div>`;
+  document.body.appendChild(modal);
+  setTimeout(()=>document.getElementById('rl-pw')?.focus(),100);
+}
+
+async function doRelogin(email){
+  const pw=document.getElementById('rl-pw')?.value;
+  const errEl=document.getElementById('rl-err');
+  if(!pw){errEl.textContent='비밀번호를 입력해주세요.';errEl.style.display='block';return;}
+  try{
+    await signIn(email,pw);
+    document.getElementById('relogin-modal')?.remove();
+    setSyncStatus('syncing');
+    pullFromCloud().then(synced=>{if(synced){loadLocalData();render();}});
+  }catch(e){
+    errEl.textContent=e.message||'로그인 실패';
+    errEl.style.display='block';
   }
 }
 
@@ -743,7 +823,7 @@ function saveGoals(){storeSet('goals:'+MK,state.goals);}
 function addTask(){
   const inp=document.getElementById('add-input');
   const txt=inp.value.trim();if(!txt)return;
-  state.tasks.push({id:uid(),text:txt,completed:false,slot:null,duration:1,created:Date.now()});
+  state.tasks.push({id:uid(),text:txt,completed:false,slot:null,duration:30,created:Date.now()});
   saveToday();inp.value='';renderLeft();renderGrid();renderProg();
 }
 function toggleTask(id){
@@ -764,8 +844,14 @@ function unslot(id){
 }
 function pullCarryover(id){
   const ct=state.carryover.find(x=>x.id===id);if(!ct)return;
-  state.tasks.push({id:uid(),text:ct.text,completed:false,slot:null,duration:1,created:Date.now()});
+  state.tasks.push({id:uid(),text:ct.text,completed:false,slot:null,duration:30,created:Date.now()});
   state.carryover=state.carryover.filter(x=>x.id!==id);
+  // Fix1: 이월된 항목 ID 기록 → 새로고침해도 다시 안 뜸
+  const carried=JSON.parse(lsGet('carried:'+YK)||'[]');
+  carried.push(id);
+  lsSet('carried:'+YK,JSON.stringify(carried));
+  bkSet('carried:'+YK,JSON.stringify(carried));
+  storeSet('carried:'+YK,carried);
   saveToday();renderCarryover();renderLeft();renderProg();
 }
 
@@ -876,11 +962,11 @@ function onT3Drop(e,i){
   }
 }
 
-/* ── RESIZE ── */
+/* ── RESIZE (10분 단위) ── */
 let rsState=null;
-function startResize(e,taskId,startDur){
+function startResize(e,taskId,startDurMin){
   e.stopPropagation();e.preventDefault();
-  rsState={taskId,startY:e.clientY,startDur,curDur:startDur};
+  rsState={taskId,startY:e.clientY,startDurMin,curDurMin:startDurMin};
   document.addEventListener('mousemove',onResizeMove);
   document.addEventListener('mouseup',onResizeEnd);
   document.body.style.cursor='ns-resize';
@@ -889,29 +975,24 @@ function startResize(e,taskId,startDur){
 function onResizeMove(e){
   if(!rsState)return;
   const dy=e.clientY-rsState.startY;
-  const delta=Math.round(dy/SLOT_H);
-  const newDur=Math.max(1,Math.min(16,rsState.startDur+delta));
-  if(newDur!==rsState.curDur){
-    rsState.curDur=newDur;
+  const deltaMins=dy*MIN_PER_PX; // px → 분
+  const rawMins=rsState.startDurMin+deltaMins;
+  const snapped=Math.round(rawMins/SNAP)*SNAP; // 10분 단위 스냅
+  const newDur=Math.max(10,Math.min(480,snapped));
+  if(newDur!==rsState.curDurMin){
+    rsState.curDurMin=newDur;
     const el=document.querySelector(`.stask[data-id="${rsState.taskId}"]`);
     if(el){
-      el.style.height=(newDur*SLOT_H-4)+'px';
+      el.style.height=durToH(newDur)+'px';
       const lbl=el.querySelector('.st-dur');
-      if(lbl)lbl.textContent=newDur>1?`${newDur*30}분`:'';
-      else if(newDur>1){
-        const top=el.querySelector('.st-top');
-        const rm=top.querySelector('.st-rm');
-        const sp=document.createElement('span');
-        sp.className='st-dur';sp.textContent=`${newDur*30}분`;
-        top.insertBefore(sp,rm);
-      }
+      if(lbl)lbl.textContent=`${newDur}분`;
     }
   }
 }
 function onResizeEnd(){
   if(!rsState)return;
   const t=state.tasks.find(x=>x.id===rsState.taskId);
-  if(t){t.duration=rsState.curDur;saveToday();renderLeft();}
+  if(t){t.duration=rsState.curDurMin;saveToday();renderLeft();}
   rsState=null;
   document.removeEventListener('mousemove',onResizeMove);
   document.removeEventListener('mouseup',onResizeEnd);
@@ -1042,7 +1123,76 @@ function renderMonthGoals(){
       <button class="g-del" onclick="removeGoalByKey('${g.id}','${gk}')">×</button>
     </div>`).join('');
 }
-function buildTimeGrid(){
+/* ── SLOTS & GRID ── */
+const SLOT_H=40; // 40px = 30분
+const MIN_PER_PX=30/SLOT_H; // 분/px
+const SNAP=10; // 10분 단위 스냅
+
+function durToH(durMin){return(durMin/30)*SLOT_H-4;} // 분 → px
+
+function renderGrid(){
+  SLOTS.forEach(s=>{const el=document.getElementById('ts-'+s.replace(':','-'));if(el)el.innerHTML='';});
+  state.tasks.filter(t=>t.slot).forEach(t=>{
+    const el=document.getElementById('ts-'+t.slot.replace(':','-'));if(!el)return;
+    // duration: 분 단위. 구버전(슬롯수) 호환
+    const durMin=t.duration>=30?t.duration:(t.duration||1)*30;
+    const taskH=durToH(durMin);
+    const d=document.createElement('div');
+    d.className='stask'+(t.completed?' done':'');
+    d.setAttribute('data-id',t.id);d.setAttribute('draggable','true');
+    d.style.height=taskH+'px';
+    const durLabel=durMin>0?`<span class="st-dur" onclick="editDuration('${t.id}')" style="cursor:pointer" title="클릭해서 변경">${durMin}분</span>`:'';
+    d.innerHTML=`<div class="st-top">
+      <button class="st-chk" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
+      <span class="st-txt" title="${esc(t.text)}">${esc(t.text)}</span>
+      ${durLabel}
+      <button class="st-edit" onclick="editSlotTask('${t.id}')" title="텍스트 수정" style="background:transparent;border:none;color:var(--t3);font-size:11px;padding:0 2px;cursor:pointer;opacity:0;transition:opacity .12s">✎</button>
+      <button class="st-rm" onclick="unslot('${t.id}')">↩</button>
+    </div>
+    <div class="st-resize" data-id="${t.id}" title="드래그해서 시간 조절 (10분 단위)">
+      <div class="st-resize-bar"></div>
+    </div>`;
+    d.addEventListener('mouseenter',()=>{const b=d.querySelector('.st-edit');if(b)b.style.opacity='.7';});
+    d.addEventListener('mouseleave',()=>{const b=d.querySelector('.st-edit');if(b)b.style.opacity='0';});
+    d.addEventListener('dragstart',e=>{if(e.target.closest('.st-resize')){e.preventDefault();return;}onDragStart(e,t.id,'slot',t.slot);});
+    d.addEventListener('dragend',onDragEnd);
+    d.querySelector('.st-resize').addEventListener('mousedown',e=>startResize(e,t.id,durMin));
+    el.appendChild(d);
+  });
+}
+
+/* Fix3: 시간표 내 텍스트 수정 */
+function editSlotTask(id){
+  const d=document.querySelector(`.stask[data-id="${id}"]`);if(!d)return;
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  const txtEl=d.querySelector('.st-txt');if(!txtEl)return;
+  if(d.querySelector('.st-edit-inp'))return;
+  d.setAttribute('draggable','false');
+  const inp=document.createElement('input');
+  inp.style.cssText='flex:1;background:var(--s3);border:1px solid var(--accent);color:var(--t1);padding:2px 6px;font-family:inherit;font-size:11px;border-radius:3px;outline:none;min-width:0';
+  inp.value=t.text;inp.className='st-edit-inp';inp.maxLength=120;
+  txtEl.replaceWith(inp);
+  inp.focus();inp.select();
+  const commit=()=>{
+    const v=inp.value.trim();
+    if(v&&v!==t.text){t.text=v;saveToday();}
+    d.setAttribute('draggable','true');
+    renderGrid();renderLeft();
+  };
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();inp.blur();}if(e.key==='Escape'){d.setAttribute('draggable','true');renderGrid();}e.stopPropagation();});
+}
+
+/* Fix4: 시간(분) 직접 수정 */
+function editDuration(id){
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  const curMin=t.duration>=30?t.duration:(t.duration||1)*30;
+  const v=prompt(`시간을 분 단위로 입력 (10분 단위):\n현재: ${curMin}분`,curMin);
+  if(!v)return;
+  const n=Math.round(parseInt(v)/10)*10;
+  if(isNaN(n)||n<10)return;
+  t.duration=n;saveToday();renderGrid();renderLeft();
+}
   document.getElementById('tgrid-inner').innerHTML=SLOTS.map(slot=>{
     const isH=slot.endsWith(':00'),h=parseInt(slot.split(':')[0]);
     const h12=h>12?h-12:(h===0?12:h),ap=h>=12?'PM':'AM';
