@@ -117,12 +117,12 @@ button{font-family:inherit;cursor:pointer}textarea{font-family:inherit;resize:no
 /* GRID */
 #tgrid{flex:1;overflow-y:auto;background:var(--bg)}
 #tgrid-inner{position:relative}
-.trow{display:flex;height:40px;border-bottom:1px solid var(--b1);flex-shrink:0;position:relative;overflow:visible}
+.trow{display:flex;height:60px;border-bottom:1px solid var(--b1);flex-shrink:0;position:relative;overflow:visible}
 .trow.half{border-bottom:1px dashed var(--s3)}
 .trow.over{background:rgba(240,160,48,.1)!important;outline:1px solid var(--accent)}
-.tlabel{width:70px;flex-shrink:0;padding:4px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:40px;z-index:1;position:relative}
+.tlabel{width:70px;flex-shrink:0;padding:4px 8px;display:flex;align-items:flex-start;justify-content:flex-end;gap:2px;border-right:1px solid var(--b1);background:var(--s1);height:60px;z-index:1;position:relative}
 .tl-h{font-size:11px;color:var(--t2);font-weight:500}.tl-ap{font-size:8px;color:var(--accent);margin-top:1px}.tl-30{font-size:9px;color:var(--t4)}
-.ttasks{flex:1;position:relative;overflow:visible;height:40px}
+.ttasks{flex:1;position:relative;overflow:visible;height:60px}
 .stask{position:absolute;left:8px;right:8px;top:2px;display:flex;flex-direction:column;padding:3px 10px 0;border-left:2px solid var(--accent);background:var(--ad);border-radius:0 3px 3px 0;cursor:grab;user-select:none;z-index:3;box-sizing:border-box;min-height:12px;overflow:hidden}
 .stask.done{border-left-color:var(--green);background:var(--gd)}
 .stask.dragging-slot{opacity:.2}
@@ -1137,7 +1137,7 @@ function migrateDurations(tasks){
     return {...t, durUnit:'min'};
   });
 }
-const SLOT_H=40; // 40px = 30분
+const SLOT_H=60; // 60px = 30분 (10분=20px, 20분=36px, 30분=56px)
 const MIN_PER_PX=30/SLOT_H; // 분/px
 const SNAP=10; // 10분 단위 스냅
 
@@ -1211,7 +1211,7 @@ function buildTimeGrid(){
     const h12=h>12?h-12:(h===0?12:h),ap=h>=12?'PM':'AM';
     const label=isH?`<span class="tl-h">${String(h12).padStart(2,'0')}:00</span><span class="tl-ap">${ap}</span>`
       :`<span class="tl-30">${String(h12).padStart(2,'0')}:30</span>`;
-    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:${SLOT_H}px"
+    return `<div class="trow ${isH?'':'half'}" data-slot="${slot}" style="height:60px"
       ondragover="onSlotOver(event,'${slot}')" ondragleave="onSlotLeave(this)" ondrop="onSlotDrop(event,'${slot}')">
       <div class="tlabel">${label}</div>
       <div class="ttasks" id="ts-${slot.replace(':','-')}"></div>
