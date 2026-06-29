@@ -805,7 +805,6 @@ async function doRelogin(email){
 /* ── SLOTS ── */
 const SLOTS=[];
 for(let h=5;h<24;h++){const hh=String(h).padStart(2,'0');SLOTS.push(hh+':00');SLOTS.push(hh+':30');}
-const SLOT_H=40;
 const mk3=()=>[0,1,2].map(()=>({id:uid(),text:'',completed:false,taskId:null}));
 const state={
   view:'today',tasks:[],carryover:[],dragging:null,draggingFrom:null,
