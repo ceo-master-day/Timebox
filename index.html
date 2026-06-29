@@ -681,7 +681,7 @@ function loadLocalData(){
     const b=bkGet(key);if(b){lsSet(key,b);return b;}
     return null;
   }
-  try{const t=get(TK);state.tasks=t?JSON.parse(t):[];}catch{state.tasks=[];}
+  try{const t=get(TK);state.tasks=t?migrateDurations(JSON.parse(t)):[];}catch{state.tasks=[];}
   try{
     const y=get(YK);
     // Fix1: 이미 이월된 항목은 다시 안 뜨게
@@ -1121,14 +1121,22 @@ function renderMonthGoals(){
       <button class="g-del" onclick="removeGoalByKey('${g.id}','${gk}')">×</button>
     </div>`).join('');
 }
-/* duration 분 단위 변환 (구버전 호환) */
-function getDurMin(t){
-  if(t.durUnit==='min') return t.duration||30; // 새 형식: 분 단위
-  if(!t.duration||t.duration<=1) return 30;   // 구버전 기본: 30분
-  if(t.duration<=16) return t.duration*30;    // 구버전: 슬롯 수 × 30
-  return t.duration;                           // 이미 분 단위
+/* duration: 항상 분 단위로 통일 */
+function getDurMin(t){return t.duration||30;}
+function setDurMin(t,min){t.duration=min;}
+
+/* 로드 시 구버전 슬롯 단위 → 분 단위 변환 */
+function migrateDurations(tasks){
+  return tasks.map(t=>{
+    if(t.durUnit==='min'||!t.duration) return t;
+    if(t.duration<=16){
+      // 구버전: 슬롯 수 (1~16) → 분으로 변환
+      return {...t, duration:t.duration*30, durUnit:'min'};
+    }
+    // 이미 분 단위 (17분 이상)
+    return {...t, durUnit:'min'};
+  });
 }
-function setDurMin(t,min){t.duration=min;t.durUnit='min';}
 const SLOT_H=40; // 40px = 30분
 const MIN_PER_PX=30/SLOT_H; // 분/px
 const SNAP=10; // 10분 단위 스냅
