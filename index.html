@@ -1191,6 +1191,7 @@ function editDuration(id){
   if(isNaN(n)||n<10)return;
   t.duration=n;saveToday();renderGrid();renderLeft();
 }
+function buildTimeGrid(){
   document.getElementById('tgrid-inner').innerHTML=SLOTS.map(slot=>{
     const isH=slot.endsWith(':00'),h=parseInt(slot.split(':')[0]);
     const h12=h>12?h-12:(h===0?12:h),ap=h>=12?'PM':'AM';
@@ -1202,32 +1203,6 @@ function editDuration(id){
       <div class="ttasks" id="ts-${slot.replace(':','-')}"></div>
     </div>`;
   }).join('');
-}
-function renderGrid(){
-  SLOTS.forEach(s=>{const el=document.getElementById('ts-'+s.replace(':','-'));if(el)el.innerHTML='';});
-  state.tasks.filter(t=>t.slot).forEach(t=>{
-    const el=document.getElementById('ts-'+t.slot.replace(':','-'));if(!el)return;
-    const dur=Math.max(1,t.duration||1);
-    const taskH=dur*SLOT_H-4;
-    const d=document.createElement('div');
-    d.className='stask'+(t.completed?' done':'');
-    d.setAttribute('data-id',t.id);d.setAttribute('draggable','true');
-    d.style.height=taskH+'px';
-    const durLabel=dur>1?`<span class="st-dur">${dur*30}분</span>`:'';
-    d.innerHTML=`<div class="st-top">
-      <button class="st-chk" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
-      <span class="st-txt" title="${esc(t.text)}">${esc(t.text)}</span>
-      ${durLabel}
-      <button class="st-rm" onclick="unslot('${t.id}')">↩</button>
-    </div>
-    <div class="st-resize" data-id="${t.id}" title="드래그해서 시간 늘리기">
-      <div class="st-resize-bar"></div>
-    </div>`;
-    d.addEventListener('dragstart',e=>{if(e.target.closest('.st-resize')){e.preventDefault();return;}onDragStart(e,t.id,'slot',t.slot);});
-    d.addEventListener('dragend',onDragEnd);
-    d.querySelector('.st-resize').addEventListener('mousedown',e=>startResize(e,t.id,dur));
-    el.appendChild(d);
-  });
 }
 function setView(v){
   state.view=v;
