@@ -990,7 +990,7 @@ function onResizeMove(e){
 function onResizeEnd(){
   if(!rsState)return;
   const t=state.tasks.find(x=>x.id===rsState.taskId);
-  if(t){t.duration=rsState.curDurMin;saveToday();renderLeft();}
+  if(t){setDurMin(t,rsState.curDurMin);saveToday();renderLeft();}
   rsState=null;
   document.removeEventListener('mousemove',onResizeMove);
   document.removeEventListener('mouseup',onResizeEnd);
@@ -1121,7 +1121,14 @@ function renderMonthGoals(){
       <button class="g-del" onclick="removeGoalByKey('${g.id}','${gk}')">×</button>
     </div>`).join('');
 }
-/* ── SLOTS & GRID ── */
+/* duration 분 단위 변환 (구버전 호환) */
+function getDurMin(t){
+  if(t.durUnit==='min') return t.duration||30; // 새 형식: 분 단위
+  if(!t.duration||t.duration<=1) return 30;   // 구버전 기본: 30분
+  if(t.duration<=16) return t.duration*30;    // 구버전: 슬롯 수 × 30
+  return t.duration;                           // 이미 분 단위
+}
+function setDurMin(t,min){t.duration=min;t.durUnit='min';}
 const SLOT_H=40; // 40px = 30분
 const MIN_PER_PX=30/SLOT_H; // 분/px
 const SNAP=10; // 10분 단위 스냅
@@ -1132,14 +1139,13 @@ function renderGrid(){
   SLOTS.forEach(s=>{const el=document.getElementById('ts-'+s.replace(':','-'));if(el)el.innerHTML='';});
   state.tasks.filter(t=>t.slot).forEach(t=>{
     const el=document.getElementById('ts-'+t.slot.replace(':','-'));if(!el)return;
-    // duration: 분 단위. 구버전(슬롯수) 호환
-    const durMin=t.duration>=30?t.duration:(t.duration||1)*30;
+    const durMin=getDurMin(t);
     const taskH=durToH(durMin);
     const d=document.createElement('div');
     d.className='stask'+(t.completed?' done':'');
     d.setAttribute('data-id',t.id);d.setAttribute('draggable','true');
     d.style.height=taskH+'px';
-    const durLabel=durMin>0?`<span class="st-dur" onclick="editDuration('${t.id}')" style="cursor:pointer" title="클릭해서 변경">${durMin}분</span>`:'';
+    const durLabel=`<span class="st-dur" onclick="editDuration('${t.id}')" style="cursor:pointer" title="클릭해서 변경">${durMin}분</span>`;
     d.innerHTML=`<div class="st-top">
       <button class="st-chk" onclick="toggleTask('${t.id}')">${t.completed?'✓':''}</button>
       <span class="st-txt" title="${esc(t.text)}">${esc(t.text)}</span>
@@ -1184,12 +1190,12 @@ function editSlotTask(id){
 /* Fix4: 시간(분) 직접 수정 */
 function editDuration(id){
   const t=state.tasks.find(x=>x.id===id);if(!t)return;
-  const curMin=t.duration>=30?t.duration:(t.duration||1)*30;
+  const curMin=getDurMin(t);
   const v=prompt(`시간을 분 단위로 입력 (10분 단위):\n현재: ${curMin}분`,curMin);
   if(!v)return;
   const n=Math.round(parseInt(v)/10)*10;
   if(isNaN(n)||n<10)return;
-  t.duration=n;saveToday();renderGrid();renderLeft();
+  setDurMin(t,n);saveToday();renderGrid();renderLeft();
 }
 function buildTimeGrid(){
   document.getElementById('tgrid-inner').innerHTML=SLOTS.map(slot=>{
